@@ -1,0 +1,8 @@
+../Core/Src/ScioSense/01_Basic.cpp:14:17:void UFC23_Example_Setup(UART_HandleTypeDef*, SPI_HandleTypeDef*)	4
+../Core/Src/ScioSense/01_Basic.cpp:86:17:void UFC23_Example_Loop()	4
+../Core/Src/ScioSense/01_Basic.cpp:108:9:uint8_t WaitOnInterrupt(uint16_t)	4
+../Core/Src/ScioSense/01_Basic.cpp:127:6:void UFC23_HandleGpioInterrupt(uint16_t)	2
+../Core/Src/ScioSense/01_Basic.cpp:133:1:void __static_initialization_and_destruction_0()	1
+../Core/Src/ScioSense/01_Basic.cpp:133:1:void __static_initialization_and_destruction_1()	1
+../Core/Src/ScioSense/01_Basic.cpp:133:1:cpp)	1
+../Core/Src/ScioSense/01_Basic.cpp:133:1:cpp)	1

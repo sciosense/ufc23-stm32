@@ -1,0 +1,6 @@
+#ifndef SCIOSENSE_UFC23_LIBRARY_H
+#define SCIOSENSE_UFC23_LIBRARY_H
+
+#include "ufc23.h"
+
+#endif //SCIOSENSE_UFC23_LIBRARY_H

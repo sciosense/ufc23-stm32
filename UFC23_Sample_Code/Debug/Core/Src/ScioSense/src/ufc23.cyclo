@@ -1,0 +1,120 @@
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:12:22:Result Ufc23_ReadRemoteCommand(ScioSense_Ufc23*, uint8_t, uint16_t, uint8_t*, uint16_t)	1
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:22:22:Result Ufc23_WriteRemoteCommand(ScioSense_Ufc23*, uint8_t, uint16_t)	1
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:32:22:Result Ufc23_WriteDWordRAM(ScioSense_Ufc23*, uint16_t, uint32_t)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:60:24:uint32_t Ufc23_ByteArrayToDWord(uint8_t*, uint16_t)	1
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:71:24:uint32_t Ufc23_ParseUsmBatchDWordValue(ScioSense_Ufc23*, uint8_t, uint8_t)	3
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:82:24:uint32_t Ufc23_ParseUsmDWordValue(ScioSense_Ufc23*, uint16_t)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:94:22:Result Ufc23_ReadDWordRAM(ScioSense_Ufc23*, uint16_t, uint8_t*, uint16_t)	3
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:115:24:uint16_t Ufc23_GetConfigurationRegisterAddress(ScioSense_Ufc23*, uint8_t)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:124:24:uint32_t Ufc23_GetConfigurationRegisterSetting(ScioSense_Ufc23*, uint8_t)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:133:22:Result Ufc23_Reset(ScioSense_Ufc23*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:145:22:Result Ufc23_Init(ScioSense_Ufc23*)	7
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:188:23:uint8_t Ufc23_IsConnected(ScioSense_Ufc23*)	1
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:193:29:uint8_t Ufc23_GetCommunicationFlagRegister(ScioSense_Ufc23*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:207:29:uint8_t Ufc23_GetInterruptFlagRegister(ScioSense_Ufc23*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:221:32:uint16_t Ufc23_GetFrontendErrorFlagRegister(ScioSense_Ufc23*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:235:29:uint8_t Ufc23_GetFrontendStatusFlagRegister(ScioSense_Ufc23*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:249:29:uint8_t Ufc23_GetSystemStatusFlagRegister(ScioSense_Ufc23*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:263:22:Result Ufc23_ClearFlagRegisters(ScioSense_Ufc23*)	1
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:278:22:Result Ufc23_DetectEndBootLoadSequence(ScioSense_Ufc23*)	4
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:299:22:Result Ufc23_TriggerSingleMeasurement(ScioSense_Ufc23*, Ufc23_CycleTaskRequest)	3
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:319:22:Result Ufc23_TriggerTransducerPortOpenMeasurement(ScioSense_Ufc23*)	3
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:342:22:Result Ufc23_CheckTransducerPortOpenMeasurement(ScioSense_Ufc23*)	3
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:366:22:Result Ufc23_SetStandbyState(ScioSense_Ufc23*)	5
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:393:22:Result Ufc23_EnableMeasureMode(ScioSense_Ufc23*)	4
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:447:22:Result Ufc23_EnableMeasureModeTimerHalted(ScioSense_Ufc23*)	3
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:514:22:Result Ufc23_GetMode(ScioSense_Ufc23*)	22
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:565:22:Result Ufc23_StartCyclingMeasurement(ScioSense_Ufc23*)	1
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:573:22:Result Ufc23_WriteConfig(ScioSense_Ufc23*)	6
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:615:22:Result Ufc23_GetUSMData(ScioSense_Ufc23*)	1
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:620:22:Result Ufc23_Update(ScioSense_Ufc23*)	8
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:668:20:void Ufc23_UpdateAmountBundlesInBatch(ScioSense_Ufc23*)	8
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:698:23:uint8_t Ufc23_ErrorsPresentInLastUpdate(ScioSense_Ufc23*)	3
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:714:24:uint32_t Ufc23_ParseErrorFlags(ScioSense_Ufc23*, uint8_t)	1
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:719:23:uint8_t Ufc23_ParseBatchErrorFlags(ScioSense_Ufc23*, uint32_t*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:729:23:uint8_t Ufc23_ParseAmplitudeRaw(ScioSense_Ufc23*, uint8_t, UFC23_AMP_Raw_TypeDef*, UFC23_AMP_Raw_TypeDef*)	3
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:758:23:uint8_t Ufc23_ParseAmplitudeV(ScioSense_Ufc23*, uint8_t, UFC23_AMP_V_TypeDef*, UFC23_AMP_V_TypeDef*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:778:23:uint8_t Ufc23_ParseBatchAmplitudeRaw(ScioSense_Ufc23*, UFC23_AMP_Raw_TypeDef*, UFC23_AMP_Raw_TypeDef*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:789:23:uint8_t Ufc23_ParseBatchAmplitudeV(ScioSense_Ufc23*, UFC23_AMP_V_TypeDef*, UFC23_AMP_V_TypeDef*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:800:23:uint8_t Ufc23_ParsePulseWidthRaw(ScioSense_Ufc23*, uint8_t, UFC23_PW_Raw_TypeDef*, UFC23_PW_Raw_TypeDef*)	3
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:837:23:uint8_t Ufc23_ParsePulseWidthRatio(ScioSense_Ufc23*, uint8_t, UFC23_PW_Ps_TypeDef*, UFC23_PW_Ps_TypeDef*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:855:23:uint8_t Ufc23_ParseBatchPulseWidthRaw(ScioSense_Ufc23*, UFC23_PW_Raw_TypeDef*, UFC23_PW_Raw_TypeDef*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:866:23:uint8_t Ufc23_ParseBatchPulseWidthRatio(ScioSense_Ufc23*, UFC23_PW_Ps_TypeDef*, UFC23_PW_Ps_TypeDef*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:877:23:uint8_t Ufc23_ParseTofMultiHitSumRaw(ScioSense_Ufc23*, uint8_t, uint64_t*, uint64_t*)	3
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:916:23:uint8_t Ufc23_ParseTofMultiHitNs(ScioSense_Ufc23*, uint8_t, float*, float*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:942:23:uint8_t Ufc23_ParseBatchTofMultiHitNs(ScioSense_Ufc23*, float*, float*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:953:23:uint8_t Ufc23_ParseTofMultiHitsCount(ScioSense_Ufc23*, uint8_t, uint8_t*, uint8_t*)	3
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:983:23:uint8_t Ufc23_ParseBatchTofMultiHitsCount(ScioSense_Ufc23*, uint8_t*, uint8_t*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:994:23:uint8_t Ufc23_ParseVddRaw(ScioSense_Ufc23*, uint8_t, uint16_t*, uint16_t*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:1012:23:uint8_t Ufc23_ParseVddV(ScioSense_Ufc23*, uint8_t, float*, float*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:1027:23:uint8_t Ufc23_ParseBatchVddV(ScioSense_Ufc23*, float*, float*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:1038:23:uint8_t Ufc23_ParseHccCalibRaw(ScioSense_Ufc23*, uint8_t, uint32_t*)	3
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:1061:23:uint8_t Ufc23_ParseHsoMhz(ScioSense_Ufc23*, uint8_t, float*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:1074:23:uint8_t Ufc23_ParseBatchHsoMhz(ScioSense_Ufc23*, float*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:1085:23:uint8_t Ufc23_ParseZcLvlRaw(ScioSense_Ufc23*, uint8_t, uint16_t*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:1102:23:uint8_t Ufc23_ParseZcLvlV(ScioSense_Ufc23*, uint8_t, float*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:1115:23:uint8_t Ufc23_ParseBatchZcLvlV(ScioSense_Ufc23*, float*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:1126:23:uint8_t Ufc23_ParseSingleCycleUsTofHitsRaw(ScioSense_Ufc23*, uint32_t*, uint32_t*, uint8_t*, uint8_t*)	6
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:1164:23:uint8_t Ufc23_ParseSingleCycleUsTofHitsNs(ScioSense_Ufc23*, float*, float*, uint8_t*, uint8_t*)	3
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:1183:23:uint8_t Ufc23_ParseTemperatureSeq1degC(ScioSense_Ufc23*, float*, float*)	3
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:1223:23:uint8_t Ufc23_ParseTemperatureSeq2degC(ScioSense_Ufc23*, float*, float*)	3
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:1263:20:void Ufc23_SetMeasureCycleTimeUs(ScioSense_Ufc23*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:1278:39:uint8_t Ufc23_GetAmountMeasurementsInBatch(ScioSense_Ufc23*)	1
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:1283:20:void Ufc23_UpdateCorrectionFactorHso(ScioSense_Ufc23*, uint32_t, float)	1
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:1292:20:void Ufc23_UpdatePulseWidthLsb(ScioSense_Ufc23*, float, float)	1
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:1297:20:void Ufc23_UpdateTimeOfFlightLsb(ScioSense_Ufc23*, float, float)	1
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:1302:20:void Ufc23_SetConfigurationRegisters(ScioSense_Ufc23*, uint32_t*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:1311:20:void Ufc23_InitializeConfiguration(ScioSense_Ufc23*)	2
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:1350:23:uint8_t Ufc23_IsPartIdValid(ScioSense_Ufc23*)	3
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:1355:22:Result Ufc23_GetPartId(ScioSense_Ufc23*)	4
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:1382:22:Result Ufc23_ReadConfig(ScioSense_Ufc23*)	3
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:1402:20:void Ufc23_UpdateParameters(ScioSense_Ufc23*)	1
+../Core/Src/ScioSense/src/lib/ufc23/ScioSense_Ufc23.inl.h:1553:20:void Ufc23_UpdateConfiguration(ScioSense_Ufc23*)	1
+../Core/Src/ScioSense/src/lib/io/ScioSense_IOInterface_STM32.c:18:22:int8_t ScioSense_STM32_Spi_Write(void*, uint8_t*, uint16_t)	1
+../Core/Src/ScioSense/src/lib/io/ScioSense_IOInterface_STM32.c:36:22:int8_t ScioSense_STM32_Spi_Read(void*, uint8_t*, uint16_t, uint8_t*, uint16_t)	1
+../Core/Src/ScioSense/src/lib/io/ScioSense_IOInterface_STM32.c:57:20:void ScioSense_STM32_Wait(uint32_t)	1
+../Core/Src/ScioSense/src/ufc23.cpp:9:1:UFC23::~UFC23()	1
+../Core/Src/ScioSense/src/ufc23.cpp:11:1:UFC23::UFC23()	1
+../Core/Src/ScioSense/src/ufc23.cpp:23:6:void UFC23::begin(SPI_HandleTypeDef*, uint16_t, GPIO_TypeDef*)	1
+../Core/Src/ScioSense/src/ufc23.cpp:61:8:Result UFC23::reset()	1
+../Core/Src/ScioSense/src/ufc23.cpp:66:6:bool UFC23::init()	1
+../Core/Src/ScioSense/src/ufc23.cpp:73:6:bool UFC23::isConnected()	1
+../Core/Src/ScioSense/src/ufc23.cpp:78:8:Result UFC23::readConfig()	1
+../Core/Src/ScioSense/src/ufc23.cpp:83:8:Result UFC23::writeConfig()	1
+../Core/Src/ScioSense/src/ufc23.cpp:88:8:Result UFC23::startMeasurement()	1
+../Core/Src/ScioSense/src/ufc23.cpp:93:8:Result UFC23::stopMeasurement()	1
+../Core/Src/ScioSense/src/ufc23.cpp:98:8:Result UFC23::update()	1
+../Core/Src/ScioSense/src/ufc23.cpp:103:9:uint8_t UFC23::getAmplitudeMeasurementResultsRaw(UFC23_AMP_Raw_TypeDef*, UFC23_AMP_Raw_TypeDef*)	1
+../Core/Src/ScioSense/src/ufc23.cpp:108:9:uint8_t UFC23::getAmplitudeMeasurementResultsV(UFC23_AMP_V_TypeDef*, UFC23_AMP_V_TypeDef*)	1
+../Core/Src/ScioSense/src/ufc23.cpp:113:9:uint8_t UFC23::getPulseWidthMeasurementResultsRaw(UFC23_PW_Raw_TypeDef*, UFC23_PW_Raw_TypeDef*)	1
+../Core/Src/ScioSense/src/ufc23.cpp:118:9:uint8_t UFC23::getPulseWidthMeasurementResultsRatio(UFC23_PW_Ps_TypeDef*, UFC23_PW_Ps_TypeDef*)	1
+../Core/Src/ScioSense/src/ufc23.cpp:123:9:uint8_t UFC23::getMultiHitSumNs(float*, float*)	1
+../Core/Src/ScioSense/src/ufc23.cpp:128:9:uint8_t UFC23::getMultiHitCount(uint8_t*, uint8_t*)	1
+../Core/Src/ScioSense/src/ufc23.cpp:133:9:uint8_t UFC23::getVddVcc(float*, float*)	1
+../Core/Src/ScioSense/src/ufc23.cpp:138:9:uint8_t UFC23::getHighSpeedOscillatorFrequencyMhz(float*)	1
+../Core/Src/ScioSense/src/ufc23.cpp:143:9:uint8_t UFC23::getZeroCrossLevelV(float*)	1
+../Core/Src/ScioSense/src/ufc23.cpp:148:9:uint8_t UFC23::getTemperaturesSeq1DegC(float*, float*)	1
+../Core/Src/ScioSense/src/ufc23.cpp:153:9:uint8_t UFC23::getTemperaturesSeq2DegC(float*, float*)	1
+../Core/Src/ScioSense/src/ufc23.cpp:158:8:Result UFC23::getIndividualTofHitsNs(float*, float*, uint8_t*, uint8_t*)	2
+../Core/Src/ScioSense/src/ufc23.cpp:170:7:float UFC23::getSupplyVoltageV()	2
+../Core/Src/ScioSense/src/ufc23.cpp:184:9:uint8_t UFC23::readCommunicationFlags()	2
+../Core/Src/ScioSense/src/ufc23.cpp:195:9:uint8_t UFC23::readInterruptFlags()	2
+../Core/Src/ScioSense/src/ufc23.cpp:206:10:uint16_t UFC23::readFrontendErrorFlags()	2
+../Core/Src/ScioSense/src/ufc23.cpp:218:10:uint16_t UFC23::readFrontendStatusFlags()	2
+../Core/Src/ScioSense/src/ufc23.cpp:229:9:uint8_t UFC23::readSystemStatusFlags()	2
+../Core/Src/ScioSense/src/ufc23.cpp:240:9:uint8_t UFC23::getAverageHitNs(float*, float*)	4
+../Core/Src/ScioSense/src/ufc23.cpp:267:10:uint16_t UFC23::clearFlags()	1
+../Core/Src/ScioSense/src/ufc23.cpp:272:8:Result UFC23::triggerSingleMeasurement(Ufc23_CycleTaskRequest)	1
+../Core/Src/ScioSense/src/ufc23.cpp:277:8:Result UFC23::sendRemoteCommand(uint8_t, uint16_t)	1
+../Core/Src/ScioSense/src/ufc23.cpp:282:10:uint32_t UFC23::readRamAddress(uint16_t)	2
+../Core/Src/ScioSense/src/ufc23.cpp:293:10:uint32_t UFC23::writeRamAddress(uint16_t, uint32_t)	1
+../Core/Src/ScioSense/src/ufc23.cpp:298:7:float UFC23::getHighSpeedClockFrequencyHz()	2
+../Core/Src/ScioSense/src/ufc23.cpp:311:8:Result UFC23::triggerSpoolPortOpenCheck()	1
+../Core/Src/ScioSense/src/ufc23.cpp:316:6:bool UFC23::isMeasuring()	2
+../Core/Src/ScioSense/src/ufc23.cpp:326:6:bool UFC23::hasError()	1
+../Core/Src/ScioSense/src/ufc23.cpp:331:9:uint8_t UFC23::getErrors(uint32_t*)	1
+../Core/Src/ScioSense/src/ufc23.cpp:336:13:const char* UFC23::partIdToString(Ufc23_PartID)	2
+../Core/Src/ScioSense/src/ufc23.cpp:346:9:uint8_t UFC23::errorToStrings(uint32_t, char (*)[60])	3
+../Core/Src/ScioSense/src/ufc23.cpp:360:6:bool UFC23::isSpoolWorkingWell()	2
+../Core/Src/ScioSense/src/ufc23.cpp:370:6:void UFC23::updateConfiguration()	1
+../Core/Src/ScioSense/src/ufc23.cpp:375:6:void UFC23::setConfigurationRegisters(uint32_t*)	1
