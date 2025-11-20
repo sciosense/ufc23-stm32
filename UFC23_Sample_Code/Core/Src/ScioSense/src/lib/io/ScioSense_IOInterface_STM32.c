@@ -48,7 +48,7 @@ static inline int8_t ScioSense_STM32_Spi_Transfer(void* config, uint8_t* dataToW
     HAL_SPI_Transmit(spi, dataToWrite, sizeToWrite, STM32_SPI_TIMEOUT_MS);
 
     /* 3. Read the data */
-    HAL_SPI_Receive(spi, dataToRead, sizeToRead, STM32_SPI_TIMEOUT_MS);
+    HAL_SPI_TransmitReceive(spi, dataToRead, sizeToRead, STM32_SPI_TIMEOUT_MS);
     
     /* 4. Put SSN high - Deactivate */
     HAL_GPIO_WritePin(port, cs_pin, SET_HIGH);
