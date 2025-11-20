@@ -1,6 +1,8 @@
 #ifndef SCIOSENSE_IO_INTERFACE_STM32_C
 #define SCIOSENSE_IO_INTERFACE_STM32_C
 
+#include "stddef.h"
+
 #include "stm32u3xx_hal.h"
 #include "stm32u3xx_hal_gpio.h"
 
@@ -15,7 +17,7 @@ typedef struct ScioSense_Stm32_Spi_Config
     GPIO_TypeDef*       port;
 } ScioSense_Stm32_Spi_Config;
 
-static inline int8_t ScioSense_STM32_Spi_Write(void* config, uint8_t* data, const uint16_t size)
+static inline int8_t ScioSense_STM32_Spi_Write_Data(void* config, uint8_t* data, const size_t size)
 {
     SPI_HandleTypeDef*  spi     = ((ScioSense_Stm32_Spi_Config*)config)->spi;
     uint16_t            cs_pin  = ((ScioSense_Stm32_Spi_Config*)config)->cs_pin;
@@ -33,7 +35,7 @@ static inline int8_t ScioSense_STM32_Spi_Write(void* config, uint8_t* data, cons
     return 0; // RESULT_OK;
 }
 
-static inline int8_t ScioSense_STM32_Spi_Read(void* config, uint8_t* dataToWrite, const uint16_t sizeToWrite, uint8_t* dataToRead, const uint16_t sizeToRead)
+static inline int8_t ScioSense_STM32_Spi_Transfer(void* config, uint8_t* dataToWrite, const size_t sizeToWrite, uint8_t* dataToRead, const size_t sizeToRead)
 {
     SPI_HandleTypeDef*  spi     = ((ScioSense_Stm32_Spi_Config*)config)->spi;
     uint16_t            cs_pin  = ((ScioSense_Stm32_Spi_Config*)config)->cs_pin;
@@ -46,7 +48,7 @@ static inline int8_t ScioSense_STM32_Spi_Read(void* config, uint8_t* dataToWrite
     HAL_SPI_Transmit(spi, dataToWrite, sizeToWrite, STM32_SPI_TIMEOUT_MS);
 
     /* 3. Read the data */
-    HAL_SPI_TransmitReceive(spi, dataToRead, dataToRead, sizeToRead, STM32_SPI_TIMEOUT_MS);
+    HAL_SPI_Receive(spi, dataToRead, sizeToRead, STM32_SPI_TIMEOUT_MS);
     
     /* 4. Put SSN high - Deactivate */
     HAL_GPIO_WritePin(port, cs_pin, SET_HIGH);

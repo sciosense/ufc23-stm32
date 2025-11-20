@@ -5,11 +5,12 @@
 
 #include <stdbool.h>
 #include <inttypes.h>
+#include "stddef.h"
 
 typedef struct ScioSense_Ufc23_IO
 {
-    Result  (*read)     (void* config, uint8_t* dataToWrite, const uint16_t sizeToWrite, uint8_t* dataToRead, const uint16_t sizeToRead);
-    Result  (*write)    (void* config, uint8_t* data, const uint16_t size);
+    Result  (*transfer) (void* config, uint8_t* dataToWrite, const size_t sizeToWrite, uint8_t* dataToRead, const size_t sizeToRead);
+    Result  (*write)    (void* config, uint8_t* data, const size_t size);
     void    (*wait)     (const uint32_t ms);
     void*   config;
 } ScioSense_Ufc23_IO;

@@ -1,13 +1,11 @@
 #ifndef SCIOSENSE_UFC23_INL_C_H
 #define SCIOSENSE_UFC23_INL_C_H
 
-#include "ScioSense_Ufc23.h"
-#include "ScioSense_Ufc23_defines.h"
 #include "ScioSense_Ufc23_Macros.h"
 
-#define read(dataToWrite, lenToWrite, dataToRead, lenToRead)    ufc23->io.read(ufc23->io.config, (uint8_t*)(dataToWrite), (lenToWrite), (uint8_t*)(dataToRead), (lenToRead))
-#define write(data, len)                                        ufc23->io.write(ufc23->io.config, (uint8_t*)(data), (len))
-#define wait(ms)                                                ufc23->io.wait(ms)
+#define transfer(dataToWrite, lenToWrite, dataToRead, lenToRead)        ufc23->io.transfer(ufc23->io.config, (uint8_t*)(dataToWrite), (lenToWrite), (uint8_t*)(dataToRead), (lenToRead))
+#define write(data, len)                                                ufc23->io.write(ufc23->io.config, (uint8_t*)(data), (len))
+#define wait(ms)                                                        ufc23->io.wait(ms)
 
 static inline Result Ufc23_ReadRemoteCommand(ScioSense_Ufc23* ufc23, uint8_t remoteCommand, uint16_t extendedCommand, uint8_t* dataToRead, uint16_t dataToReadSize)
 {
@@ -16,7 +14,7 @@ static inline Result Ufc23_ReadRemoteCommand(ScioSense_Ufc23* ufc23, uint8_t rem
                         ( (extendedCommand  >> UFC23_EXTENDED_COMMAND_INDEX_0)  & UFC23_REMOTE_EXTENDED_MASK_0  );
     valuesToWrite[1] =  ( (extendedCommand  << UFC23_EXTENDED_COMMAND_INDEX_1)  & UFC23_REMOTE_EXTENDED_MASK_1  );
 
-    return (Result)read(valuesToWrite, 2, dataToRead, dataToReadSize);
+    return (Result)transfer(valuesToWrite, 2, dataToRead, dataToReadSize);
 }
 
 static inline Result Ufc23_WriteRemoteCommand(ScioSense_Ufc23* ufc23, uint8_t remoteCommand, uint16_t extendedCommand)
@@ -102,7 +100,7 @@ static inline Result Ufc23_ReadDWordRAM(ScioSense_Ufc23* ufc23, uint16_t RAMAddr
         ( (RAMAddress  >> UFC23_RAM_ADDRESS_INDEX_0)  & UFC23_RAM_ADDRESS_MASK_0 );
         valuesToWrite[1] =  ( (RAMAddress  << UFC23_RAM_ADDRESS_INDEX_1)  & UFC23_RAM_ADDRESS_MASK_1 );
 
-        result = read(valuesToWrite, UFC23_COMMAND_BYTES, registerContents, 4 * registersToRead);
+        result = transfer(valuesToWrite, UFC23_COMMAND_BYTES, registerContents, 4 * registersToRead);
     }
     else
     {
