@@ -51,6 +51,7 @@ extern "C" void UFC23_Example_Setup(UART_HandleTypeDef *uart, SPI_HandleTypeDef 
         0x0000B100,     // A5
         0x00011249,     // A6
         0x000194F4,     // A7
+        0x00000000,     // A8
         0x04900000,     // A9
         0xC00FC034,     // AA
         0x0000140E,     // AB

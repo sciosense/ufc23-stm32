@@ -5,12 +5,11 @@
 
 #include <stdbool.h>
 #include <inttypes.h>
-#include "stddef.h"
 
 typedef struct ScioSense_Ufc23_IO
 {
-    Result  (*transfer) (void* config, uint8_t* dataToWrite, const size_t sizeToWrite, uint8_t* dataToRead, const size_t sizeToRead);
-    Result  (*write)    (void* config, uint8_t* data, const size_t size);
+    Result  (*read)     (void* config, uint8_t* dataToWrite, const uint16_t sizeToWrite, uint8_t* dataToRead, const uint16_t sizeToRead);
+    Result  (*write)    (void* config, uint8_t* data, const uint16_t size);
     void    (*wait)     (const uint32_t ms);
     void*   config;
 } ScioSense_Ufc23_IO;
@@ -315,6 +314,7 @@ typedef struct ScioSense_Ufc23
     float                       pwLsbNs;                                            // Value of the LSB of a Pulse Width measurement in nanoseconds
     float                       tofLsbNs;                                           // Value of the LSB of a Time of Flight measurement in nanoseconds
     float                       zeroCrossCalibration;                               // Last measured Zero Cross Calibration value
+    float                       pgaGain;                                            // Total gain of the PGA
 } ScioSense_Ufc23;
 
 static inline Result                    Ufc23_Reset                                 (ScioSense_Ufc23* ufc23);               // Executes reset of all digital blocks 
@@ -342,6 +342,9 @@ static inline Result                    Ufc23_HaltMeasureTimer                  
 static inline Result                    Ufc23_ReleaseHaltMeasureTimer               (ScioSense_Ufc23* ufc23);                                                       // Release the halt on the Measure Cycle Timer but keep the device mode
 
 static inline UFC23_BATCH_AMOUNT_SIZE   Ufc23_GetAmountMeasurementsInBatch          (ScioSense_Ufc23* ufc23);                                                       // Returns the amount of measurements on each batch
+static inline float                     Ufc23_GetPgaGain                            (ScioSense_Ufc23* ufc23);                                                       // Returns the total PGA gain that has been configured into the device
+static inline float                     Ufc23_GetTimeOfFlightLsbNs                  (ScioSense_Ufc23* ufc23);                                                       // Returns the LSB of the time of Flight raw measurements in nanoseconds
+static inline float                     Ufc23_GetPulseWidthLsb                      (ScioSense_Ufc23* ufc23);                                                       // Returns the LSB of the Pulse Width raw measurements
 static inline UFC23_FR_SIZE             Ufc23_GetCommunicationFlagRegister          (ScioSense_Ufc23* ufc23);                                                       // Read the Communication flag register from the device
 static inline UFC23_FR_SIZE             Ufc23_GetInterruptFlagRegister              (ScioSense_Ufc23* ufc23);                                                       // Read the Interrupt flag register from the device
 static inline UFC23_FR_FE_SIZE          Ufc23_GetFrontendErrorFlagRegister          (ScioSense_Ufc23* ufc23);                                                       // Read the Frontend Error flag register from the device
@@ -366,6 +369,7 @@ static inline Result                    Ufc23_WriteConfig                       
 static inline Result                    Ufc23_ReadConfig                            (ScioSense_Ufc23* ufc23);                                                       // Read the configuration from the device, and if no error ocurred, copies it to the UFC23 object
 static inline void                      Ufc23_UpdateParameters                      (ScioSense_Ufc23* ufc23);                                                       // Update the struct configuration parameters with the content of the configuration array
 static inline void                      Ufc23_UpdateConfiguration                   (ScioSense_Ufc23* ufc23);                                                       // Update the content of the configuration array with the struct configuration parameters
+static inline void                      Ufc23_UpdateGain                            (ScioSense_Ufc23* ufc23);                                                       // Re-calculates the PGA gain that using the configuration
 static inline void                      Ufc23_SetConfigurationRegisters             (ScioSense_Ufc23* ufc23, uint32_t* registerConfiguration);                      // Update the configuration data using the provided array
 static inline void                      Ufc23_InitializeConfiguration               (ScioSense_Ufc23* ufc23);                                                       // Set the configuration data to the default
 

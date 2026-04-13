@@ -15,7 +15,7 @@
 #define UFC23_TOF_RES_SIZE                              float           // Data type of the calculated ToF LSB  
 #define UFC23_CYCLE_TIME_SIZE                           uint32_t        // Data type of the cycle time (in microseconds)
 #define UFC23_ID_SIZE                                   uint16_t        // Data type of the device ID
-#define UFC23_AMOUNT_CONFIGURATION_REGISTERS            (18)            // Addresses from CR[0] up to CR[17]
+#define UFC23_AMOUNT_CONFIGURATION_REGISTERS            (19)            // Addresses from CR[0] up to CR[18]
 #define UFC23_AMOUNT_USM_BATCH_REGISTERS                (160)           // Amount of registers of size UFC23_REGISTER_SIZE to be read in batch mode
 #define UFC23_AMOUNT_USM_BATCH_BYTES                    (640)           // Amount of Bytes to be read in batch mode
 #define UFC23_AMOUNT_US_TOF_HITS_SINGLE_CYCLE           (60)            // Amount of ToF Start Hits reported in the Single Cycle Mode
@@ -37,15 +37,13 @@
 
 //// UFC23 electrical constants
 #define UFC23_SAR_LSB_V                                 (0.001367)      // LSB value of the SAR used for measuring voltages. Float value in Volts
+#define UFC23_VCC_LSB_MULTIPLIER                        (2.93)          // Multiplier of SAR_LSB to obtain the LSB of the VCC measurement
+#define UFC23_VDD_LSB_MULTIPLIER                        (1.97)          // Multiplier of SAR_LSB to obtain the LSB of the VDD measurement
 #define UFC23_SAR_LSB_NUMERATOR                         (14)            // Numerator of the LSB value of the SAR used for measuring voltages
 #define UFC23_SAR_LSB_DENOMINATOR                       (10240)         // Denominator of the LSB value of the SAR used for measuring voltages
-#define UFC23_LSO_NOMINAL_FREQUENCY_HZ                  (32678)         // Nominal frequency of the Low Speed Oscillator
+#define UFC23_LSO_NOMINAL_FREQUENCY_HZ                  (32768)         // Nominal frequency of the Low Speed Oscillator
 
 //// UFC23 timing constants
-#define UFC23_TOF_LSB_DENOMINATOR                       (65536.0)       // Value to divide the T_HSO to obtain the value of the ToF values LSB
-#define UFC23_PW_LSB_DENOMINATOR                        (1024)          // Value to divide the T_HSO to obtain the value of the PW values LSB
-#define UFC23_F_LFO_HZ                                  (32768)         // Frequency in Hertz of the Low Speed Oscillator
-#define UFC23_HCC_THSO_CONSTANT_PS                      (8.0E12)        // Constant equivalent to 4 * T_LSO * 65536 for T_LSO in picoseconds
 #define UFC23_HCC_FHSO_RATIO_MHZ                        (8.0E6)         // Ratio between the frequency of the High Speed Oscillator and the HCC register content 
 #define UFC23_PAUSE_BETWEEN_COMMANDS_MS                 (1)             // Time to wait in milliseconds before issuing a new RC_FRU_CLR command ( >3 clock LSO )
 #define UFC23_T_VDD_STBL_MS                             (10)            // Stable Time VDD (after power on of VCC)
@@ -69,6 +67,45 @@
 #define UFC23_PT_POLY_SQUARE_TERM                       (10.115)        // Square value of the inverted R(T) polynomial for PT temperature sensors (according to IEC 60751:2008)
 #define UFC23_PT_POLY_LINEAR_TERM                       (235.57)        // Linear value of the inverted R(T) polynomial for PT temperature sensors (according to IEC 60751:2008)
 #define UFC23_PT_POLY_CONST_TERM                        (245.683)       // Constant value of the inverted R(T) polynomial for PT temperature sensors (according to IEC 60751:2008)
+
+//// Gain corresponding to each setting
+#define UFC23_PGA_ST1_GAIN_00                           (2.00)
+#define UFC23_PGA_ST1_GAIN_01                           (2.21)
+#define UFC23_PGA_ST1_GAIN_02                           (2.44)
+#define UFC23_PGA_ST1_GAIN_03                           (2.71)
+#define UFC23_PGA_ST1_GAIN_04                           (3.00)
+#define UFC23_PGA_ST1_GAIN_05                           (3.33)
+#define UFC23_PGA_ST1_GAIN_06                           (3.67)
+#define UFC23_PGA_ST1_GAIN_07                           (4.08)
+#define UFC23_PGA_ST1_GAIN_08                           (4.51)
+#define UFC23_PGA_ST1_GAIN_09                           (5.00)
+#define UFC23_PGA_ST1_GAIN_10                           (5.55)
+#define UFC23_PGA_ST1_GAIN_11                           (6.13)
+#define UFC23_PGA_ST1_GAIN_12                           (6.71)
+#define UFC23_PGA_ST1_GAIN_13                           (7.45)
+#define UFC23_PGA_ST1_GAIN_14                           (8.14)
+#define UFC23_PGA_ST1_GAIN_15                           (9.00)
+#define UFC23_PGA_ST1_GAIN_16                           (9.70)
+#define UFC23_PGA_ST1_GAIN_17                           (10.52)
+#define UFC23_PGA_ST1_GAIN_18                           (11.53)
+#define UFC23_PGA_ST1_GAIN_19                           (12.76)
+#define UFC23_PGA_ST1_GAIN_20                           (13.50)
+#define UFC23_PGA_ST1_GAIN_21                           (14.33)
+#define UFC23_PGA_ST1_GAIN_22                           (15.29)
+#define UFC23_PGA_ST1_GAIN_23                           (16.38)
+#define UFC23_PGA_ST1_GAIN_24                           (17.67)
+#define UFC23_PGA_ST1_GAIN_25                           (19.18)
+#define UFC23_PGA_ST1_GAIN_26                           (21.00)
+#define UFC23_PGA_ST1_GAIN_27                           (23.22)
+#define UFC23_PGA_ST1_GAIN_28                           (26.00)
+#define UFC23_PGA_ST1_GAIN_29                           (29.57)
+#define UFC23_PGA_ST1_GAIN_30                           (34.33)
+#define UFC23_PGA_ST1_GAIN_31                           (41.00)
+
+#define UFC23_PGA_ST2_GAIN_0                            (1.0)
+#define UFC23_PGA_ST2_GAIN_1                            (4.0)
+#define UFC23_PGA_ST2_GAIN_2                            (12.0)
+#define UFC23_PGA_ST2_GAIN_3                            (24.0)
 
 /************************** UFC23 Commands definitions ***********************/
 
@@ -173,46 +210,46 @@ typedef uint16_t Ufc23_ExtendedCommands;
 #define UFC23_CR_MCT_INDEX                              (5)             // Index of the configuration for the CR_MCT register on the CR array
 #define UFC23_CR_MRG_INDEX                              (6)             // Index of the configuration for the CR_MRG register on the CR array
 #define UFC23_CR_FEP_MCTRL_INDEX                        (7)             // Index of the configuration for the CR_FEP_MCTRL register on the CR array
-#define UFC23_CR_FEP_TDC_TRIM_INDEX                     (8)             // Index of the configuration for the CR_FEP_TDC_TRIM register on the CR array
-#define UFC23_CR_USM_PROC_INDEX                         (9)             // Index of the configuration for the CR_USM_PROC register on the CR array
-#define UFC23_CR_USM_FBG_MCTRL_INDEX                    (10)            // Index of the configuration for the CR_USM_FBG_MCTRL register on the CR array
-#define UFC23_CR_USM_FBG_HRC_INDEX                      (11)            // Index of the configuration for the CR_USM_FBG_HRC register on the CR array
-#define UFC23_CR_FEP_ANA_CTRL1_INDEX                    (12)            // Index of the configuration for the CR_FEP_ANA_CTRL1 register on the CR array
-#define UFC23_CR_FEP_ANA_CTRL2_INDEX                    (13)            // Index of the configuration for the CR_FEP_ANA_CTRL2 register on the CR array
-#define UFC23_CR_USM_RCV_INIT_INDEX                     (14)            // Index of the configuration for the CR_USM_RCV_INIT register on the CR array
-#define UFC23_CR_USM_HIT_CTRL_INDEX                     (15)            // Index of the configuration for the CR_USM_HIT_CTRL register on the CR array
-#define UFC23_CR_USM_WVM_INDEX                          (16)            // Index of the configuration for the CR_USM_WVM register on the CR array
-#define UFC23_CR_USM_MASK_HR_WIN_INDEX                  (17)            // Index of the configuration for the CR_USM_MASK_HR_WIN register on the CR array
+#define UFC23_CR_FEP_TDC_TRIM_INDEX                     (9)             // Index of the configuration for the CR_FEP_TDC_TRIM register on the CR array
+#define UFC23_CR_USM_PROC_INDEX                         (10)            // Index of the configuration for the CR_USM_PROC register on the CR array
+#define UFC23_CR_USM_FBG_MCTRL_INDEX                    (11)            // Index of the configuration for the CR_USM_FBG_MCTRL register on the CR array
+#define UFC23_CR_USM_FBG_HRC_INDEX                      (12)            // Index of the configuration for the CR_USM_FBG_HRC register on the CR array
+#define UFC23_CR_FEP_ANA_CTRL1_INDEX                    (13)            // Index of the configuration for the CR_FEP_ANA_CTRL1 register on the CR array
+#define UFC23_CR_FEP_ANA_CTRL2_INDEX                    (14)            // Index of the configuration for the CR_FEP_ANA_CTRL2 register on the CR array
+#define UFC23_CR_USM_RCV_INIT_INDEX                     (15)            // Index of the configuration for the CR_USM_RCV_INIT register on the CR array
+#define UFC23_CR_USM_HIT_CTRL_INDEX                     (16)            // Index of the configuration for the CR_USM_HIT_CTRL register on the CR array
+#define UFC23_CR_USM_WVM_INDEX                          (17)            // Index of the configuration for the CR_USM_WVM register on the CR array
+#define UFC23_CR_USM_MASK_HR_WIN_INDEX                  (18)            // Index of the configuration for the CR_USM_MASK_HR_WIN register on the CR array
 
 //// Bit definition of CR_FRU_IFH register
 #define UFC23_C_IRQ_EN_BL_DONE_Pos                      (0U)                                            // Interrupt Request Enable, Bootload Done
 #define UFC23_C_IRQ_EN_BL_DONE_Msk                      (0x01UL << UFC23_C_IRQ_EN_BL_DONE_Pos)          // 0x00000001
-#define UFC23_C_IRQ_EN_BL_DONE_ENABLED                  (1)                                             // Interrupt on Bootload Done
-#define UFC23_C_IRQ_EN_BL_DONE_DISABLED                 (0)                                             // No Interrupt on Bootload Done
+#define UFC23_C_IRQ_EN_BL_DONE_ENABLED                  (1L)                                            // Interrupt on Bootload Done
+#define UFC23_C_IRQ_EN_BL_DONE_DISABLED                 (0L)                                            // No Interrupt on Bootload Done
 #define UFC23_C_IRQ_EN_MIS_DONE_Pos                     (1U)                                            // Interrupt Request Enable, Measure Init Done
 #define UFC23_C_IRQ_EN_MIS_DONE_Msk                     (0x01UL << UFC23_C_IRQ_EN_MIS_DONE_Pos)         // 0x00000002
-#define UFC23_C_IRQ_EN_MIS_DONE_ENABLED                 (1)                                             // Interrupt on Measure Init Done
-#define UFC23_C_IRQ_EN_MIS_DONE_DISABLED                (0)                                             // No Interrupt on Measure Init Done
+#define UFC23_C_IRQ_EN_MIS_DONE_ENABLED                 (1L)                                            // Interrupt on Measure Init Done
+#define UFC23_C_IRQ_EN_MIS_DONE_DISABLED                (0L)                                            // No Interrupt on Measure Init Done
 #define UFC23_C_IRQ_EN_MCS_DONE_Pos                     (2U)                                            // Interrupt Request Enable, Measure Cycle Done
 #define UFC23_C_IRQ_EN_MCS_DONE_Msk                     (0x01UL << UFC23_C_IRQ_EN_MCS_DONE_Pos)         // 0x00000004
-#define UFC23_C_IRQ_EN_MCS_DONE_ENABLED                 (1)                                             // Interrupt on Measure Cycle Done
-#define UFC23_C_IRQ_EN_MCS_DONE_DISABLED                (0)                                             // No Interrupt on Measure Cycle Done
+#define UFC23_C_IRQ_EN_MCS_DONE_ENABLED                 (1L)                                            // Interrupt on Measure Cycle Done
+#define UFC23_C_IRQ_EN_MCS_DONE_DISABLED                (0L)                                            // No Interrupt on Measure Cycle Done
 #define UFC23_C_IRQ_EN_MC_BATCH_DONE_Pos                (3U)                                            // Interrupt Request Enable, Batch of Measure Cycle Done
 #define UFC23_C_IRQ_EN_MC_BATCH_DONE_Msk                (0x01UL << UFC23_C_IRQ_EN_MC_BATCH_DONE_Pos)    // 0x00000008
-#define UFC23_C_IRQ_EN_MC_BATCH_DONE_ENABLED            (1)                                             // Interrupt on Batch of Measure Cycle Done
-#define UFC23_C_IRQ_EN_MC_BATCH_DONE_DISABLED           (0)                                             // No Interrupt on Batch of Measure Cycle Done
+#define UFC23_C_IRQ_EN_MC_BATCH_DONE_ENABLED            (1L)                                            // Interrupt on Batch of Measure Cycle Done
+#define UFC23_C_IRQ_EN_MC_BATCH_DONE_DISABLED           (0L)                                            // No Interrupt on Batch of Measure Cycle Done
 #define UFC23_C_IRQ_EN_STASK_DONE_Pos                   (4U)                                            // Interrupt Request Enable, Service Task Done
 #define UFC23_C_IRQ_EN_STASK_DONE_Msk                   (0x01UL << UFC23_C_IRQ_EN_STASK_DONE_Pos)       // 0x00000010
-#define UFC23_C_IRQ_EN_STASK_DONE_ENABLED               (1)                                             // Interrupt on Service Task Done
-#define UFC23_C_IRQ_EN_STASK_DONE_DISABLED              (0)                                             // No Interrupt on Service Task Done
+#define UFC23_C_IRQ_EN_STASK_DONE_ENABLED               (1L)                                            // Interrupt on Service Task Done
+#define UFC23_C_IRQ_EN_STASK_DONE_DISABLED              (0L)                                            // No Interrupt on Service Task Done
 #define UFC23_C_IRQ_EN_USM_PAUSE_ERR_Pos                (5U)                                            // Interrupt Request Enable, Ultrasonic Measurement Pause Error
 #define UFC23_C_IRQ_EN_USM_PAUSE_ERR_Msk                (0x01UL << UFC23_C_IRQ_EN_USM_PAUSE_ERR_Pos)    // 0x00000020
-#define UFC23_C_IRQ_EN_USM_PAUSE_ERR_ENABLED            (1)                                             // Interrupt on Ultrasonic Measurement Pause Error
-#define UFC23_C_IRQ_EN_USM_PAUSE_ERR_DISABLED           (0)                                             // No Interrupt on Ultrasonic Measurement Pause Error
+#define UFC23_C_IRQ_EN_USM_PAUSE_ERR_ENABLED            (1L)                                            // Interrupt on Ultrasonic Measurement Pause Error
+#define UFC23_C_IRQ_EN_USM_PAUSE_ERR_DISABLED           (0L)                                            // No Interrupt on Ultrasonic Measurement Pause Error
 #define UFC23_C_IRQ_EN_TSC_TMO_Pos                      (6U)                                            // Interrupt Request Enable, Task Sequencer Timeout
 #define UFC23_C_IRQ_EN_TSC_TMO_Msk                      (0x01UL << UFC23_C_IRQ_EN_TSC_TMO_Pos)          // 0x00000040
-#define UFC23_C_IRQ_EN_TSC_TMO_ENABLED                  (1)                                             // Interrupt on Task Sequencer Timeout
-#define UFC23_C_IRQ_EN_TSC_TMO_DISABLED                 (0)                                             // No Interrupt on Task Sequencer Timeout
+#define UFC23_C_IRQ_EN_TSC_TMO_ENABLED                  (1L)                                            // Interrupt on Task Sequencer Timeout
+#define UFC23_C_IRQ_EN_TSC_TMO_DISABLED                 (0L)                                            // No Interrupt on Task Sequencer Timeout
 
 //// Bit definition of CR_FRU_EFH register
 #define UFC23_C_EF_EN_HCC_TDC_TMO_Pos                   (0U)                                            // Error Flag Enable, HCC TDC Timeout
@@ -227,8 +264,8 @@ typedef uint16_t Ufc23_ExtendedCommands;
 #define UFC23_C_EF_EN_USM_HW_UP_ERR_Msk                 (0x01UL << UFC23_C_EF_EN_USM_HW_UP_ERR_Pos)     // 0x00000010
 #define UFC23_C_EF_EN_USM_HW_DN_ERR_Pos                 (5U)                                            // Error Flag Enable, USM HW Error Dn
 #define UFC23_C_EF_EN_USM_HW_DN_ERR_Msk                 (0x01UL << UFC23_C_EF_EN_USM_HW_DN_ERR_Pos)     // 0x00000020
-#define UFC23_C_EF_EN_USM_HW_UP_ERR_DISABLED            (0)                                             // Clear hardware error flags
-#define UFC23_C_EF_EN_USM_HW_UP_ERR_ENABLED             (1)                                             // Set hardware error flags
+#define UFC23_C_EF_EN_USM_HW_UP_ERR_DISABLED            (0L)                                            // Clear hardware error flags
+#define UFC23_C_EF_EN_USM_HW_UP_ERR_ENABLED             (1L)                                            // Set hardware error flags
 #define UFC23_C_EF_EN_PW_UP_TDC_TMO_Pos                 (6U)                                            // Error Flag Enable, PW TDC  Timeout Up
 #define UFC23_C_EF_EN_PW_UP_TDC_TMO_Msk                 (0x01UL << UFC23_C_EF_EN_PW_UP_TDC_TMO_Pos)     // 0x00000040
 #define UFC23_C_EF_EN_PW_DN_TDC_TMO_Pos                 (7U)                                            // Error Flag Enable, PW TDC  Timeout Up
@@ -251,36 +288,36 @@ typedef uint16_t Ufc23_ExtendedCommands;
 #define UFC23_C_GPIO2_MODE_Msk                          (0x07UL << UFC23_C_GPIO2_MODE_Pos)              // 0x000001C0
 #define UFC23_C_GPIO3_MODE_Pos                          (9U)                                            // Mode of GPIO port 3
 #define UFC23_C_GPIO3_MODE_Msk                          (0x07UL << UFC23_C_GPIO3_MODE_Pos)              // 0x00000E00
-#define UFC23_C_GPIO_MODE_DI                            (7)
-#define UFC23_C_GPIO_MODE_DI_PD                         (3)
-#define UFC23_C_GPIO_MODE_DO                            (4)
-#define UFC23_C_GPIO_MODE_DO_PD                         (0)
-#define UFC23_C_GPIO_MODE_AIO                           (5)
-#define UFC23_C_GPIO_MODE_AIO_PD                        (1)
+#define UFC23_C_GPIO_MODE_DI                            (7L)
+#define UFC23_C_GPIO_MODE_DI_PD                         (3L)
+#define UFC23_C_GPIO_MODE_DO                            (4L)
+#define UFC23_C_GPIO_MODE_DO_PD                         (0L)
+#define UFC23_C_GPIO_MODE_AIO                           (5L)
+#define UFC23_C_GPIO_MODE_AIO_PD                        (1L)
 #define UFC23_C_PRB_SEL_Pos                             (12U)                                           // Reserved
 #define UFC23_C_PRB_SEL_Msk                             (0x0FUL << UFC23_C_PRB_SEL_Pos)                 // 0x0000F000
 #define UFC23_C_TST_STM_Pos                             (16U)                                           // Reserved
 #define UFC23_C_TST_STM_Msk                             (0x1FUL << UFC23_C_TST_STM_Pos)                 // 0x001F0000
 #define UFC23_C_MISO_HZ_DIS_Pos                         (21U)                                           // Remove HZ option for SPI MISO when not used
 #define UFC23_C_MISO_HZ_DIS_Msk                         (0x01UL << UFC23_C_MISO_HZ_DIS_Pos)             // 0x00200000
-#define UFC23_C_MISO_HZ_DIS_HZ                          (0)                                             // MISO is HZ when not used for read data
-#define UFC23_C_MISO_HZ_DIS_LOW                         (1)                                             // MISO is low when not used for read data
+#define UFC23_C_MISO_HZ_DIS_HZ                          (0L)                                            // MISO is HZ when not used for read data
+#define UFC23_C_MISO_HZ_DIS_LOW                         (1L)                                            // MISO is low when not used for read data
 
 //// Bit definition of CR_PM register
 #define UFC23_C_LDO_RF_RATE_Pos                         (0U)                                            // 
 #define UFC23_C_LDO_RF_RATE_Msk                         (0x07UL << UFC23_C_LDO_RF_RATE_Pos)             // 0x00000007
-#define UFC23_C_LDO_RF_RATE_64HZ                        (0)                                             // LDO refresh rate state 64 Hz
-#define UFC23_C_LDO_RF_RATE_32HZ                        (1)                                             // LDO refresh rate state 32 Hz
-#define UFC23_C_LDO_RF_RATE_16HZ                        (2)                                             // LDO refresh rate state 16 Hz
-#define UFC23_C_LDO_RF_RATE_8HZ                         (3)                                             // LDO refresh rate state 8 Hz
-#define UFC23_C_LDO_RF_RATE_4HZ                         (4)                                             // LDO refresh rate state 4 Hz
-#define UFC23_C_LDO_RF_RATE_2HZ                         (5)                                             // LDO refresh rate state 2 Hz
-#define UFC23_C_LDO_RF_RATE_1HZ                         (6)                                             // LDO refresh rate state 1 Hz
-#define UFC23_C_LDO_RF_RATE_05HZ                        (7)                                             // LDO refresh rate state 0.5 Hz
+#define UFC23_C_LDO_RF_RATE_64HZ                        (0L)                                            // LDO refresh rate state 64 Hz
+#define UFC23_C_LDO_RF_RATE_32HZ                        (1L)                                            // LDO refresh rate state 32 Hz
+#define UFC23_C_LDO_RF_RATE_16HZ                        (2L)                                            // LDO refresh rate state 16 Hz
+#define UFC23_C_LDO_RF_RATE_8HZ                         (3L)                                            // LDO refresh rate state 8 Hz
+#define UFC23_C_LDO_RF_RATE_4HZ                         (4L)                                            // LDO refresh rate state 4 Hz
+#define UFC23_C_LDO_RF_RATE_2HZ                         (5L)                                            // LDO refresh rate state 2 Hz
+#define UFC23_C_LDO_RF_RATE_1HZ                         (6L)                                            // LDO refresh rate state 1 Hz
+#define UFC23_C_LDO_RF_RATE_05HZ                        (7L)                                            // LDO refresh rate state 0.5 Hz
 #define UFC23_C_VDD18_SW_MODE_Pos                       (4U)                                            // VDD18 Switch Mode
 #define UFC23_C_VDD18_SW_MODE_Msk                       (0x01UL << UFC23_C_VDD18_SW_MODE_Pos)           // 0x00000010
-#define UFC23_C_VDD18_SW_MODE_TASK_SEQUENCER            (0)                                             // VDD_SW controlled by Task Sequencer (default)
-#define UFC23_C_VDD18_SW_MODE_ALWAYS_ENABLED            (1)                                             // VDD_SW always enabled
+#define UFC23_C_VDD18_SW_MODE_TASK_SEQUENCER            (0L)                                            // VDD_SW controlled by Task Sequencer (default)
+#define UFC23_C_VDD18_SW_MODE_ALWAYS_ENABLED            (1L)                                            // VDD_SW always enabled
 
 //// Bit definition of CR_TSC register
 #define UFC23_C_USM_PAUSE_TSEL_Pos                      (0U)                                            // Pause time between 2 US measurements up-dn (multiple of LS period)

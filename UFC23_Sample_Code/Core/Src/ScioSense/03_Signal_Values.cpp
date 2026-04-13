@@ -47,6 +47,7 @@ extern "C" void UFC23_Example_Setup(UART_HandleTypeDef *uart, SPI_HandleTypeDef 
         0x0000B100,     // A5
         0x00001249,     // A6
         0x000194F4,     // A7
+        0x00000000,     // A8
         0x04900000,     // A9
         0xC00F0034,     // AA
         0x0000140E,     // AB
@@ -76,9 +77,13 @@ extern "C" void UFC23_Example_Setup(UART_HandleTypeDef *uart, SPI_HandleTypeDef 
         float vdd[UFC23_AMOUNT_BUNDLES_MAX], vcc[UFC23_AMOUNT_BUNDLES_MAX];
         if( ufc23.getVddVcc(vdd, vcc) )
         {
-            sprintf(messageBuffer, "VDD: %0.3f mV\nVCC: %0.3f mV\n", vdd[0], vcc[0]);
+            sprintf(messageBuffer, "VDD: %0.3f V\nVCC: %0.3f V\n", vdd[0], vcc[0]);
             SerialPrint(messageBuffer);
         }
+    }
+    else
+    {
+        SerialPrint("Timeout during VDD/VCC measurement. Please verify interrupt line");
     }
 
     // Check the spool connection
@@ -94,6 +99,10 @@ extern "C" void UFC23_Example_Setup(UART_HandleTypeDef *uart, SPI_HandleTypeDef 
         {
           SerialPrint("Spool is not working well. Please check the connections\n");
         }
+    }
+    else
+    {
+        SerialPrint("Timeout during spool check. Please verify interrupt line");
     }
 
     if( ufc23.writeConfig() == RESULT_OK )

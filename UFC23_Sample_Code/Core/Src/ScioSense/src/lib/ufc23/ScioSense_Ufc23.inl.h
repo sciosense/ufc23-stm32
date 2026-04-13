@@ -1,11 +1,13 @@
 #ifndef SCIOSENSE_UFC23_INL_C_H
 #define SCIOSENSE_UFC23_INL_C_H
 
+#include "ScioSense_Ufc23.h"
+#include "ScioSense_Ufc23_defines.h"
 #include "ScioSense_Ufc23_Macros.h"
 
-#define transfer(dataToWrite, lenToWrite, dataToRead, lenToRead)        ufc23->io.transfer(ufc23->io.config, (uint8_t*)(dataToWrite), (lenToWrite), (uint8_t*)(dataToRead), (lenToRead))
-#define write(data, len)                                                ufc23->io.write(ufc23->io.config, (uint8_t*)(data), (len))
-#define wait(ms)                                                        ufc23->io.wait(ms)
+#define read(dataToWrite, lenToWrite, dataToRead, lenToRead)    ufc23->io.read(ufc23->io.config, (uint8_t*)(dataToWrite), (lenToWrite), (uint8_t*)(dataToRead), (lenToRead))
+#define write(data, len)                                        ufc23->io.write(ufc23->io.config, (uint8_t*)(data), (len))
+#define wait(ms)                                                ufc23->io.wait(ms)
 
 static inline Result Ufc23_ReadRemoteCommand(ScioSense_Ufc23* ufc23, uint8_t remoteCommand, uint16_t extendedCommand, uint8_t* dataToRead, uint16_t dataToReadSize)
 {
@@ -14,7 +16,7 @@ static inline Result Ufc23_ReadRemoteCommand(ScioSense_Ufc23* ufc23, uint8_t rem
                         ( (extendedCommand  >> UFC23_EXTENDED_COMMAND_INDEX_0)  & UFC23_REMOTE_EXTENDED_MASK_0  );
     valuesToWrite[1] =  ( (extendedCommand  << UFC23_EXTENDED_COMMAND_INDEX_1)  & UFC23_REMOTE_EXTENDED_MASK_1  );
 
-    return (Result)transfer(valuesToWrite, 2, dataToRead, dataToReadSize);
+    return (Result)read(valuesToWrite, 2, dataToRead, dataToReadSize);
 }
 
 static inline Result Ufc23_WriteRemoteCommand(ScioSense_Ufc23* ufc23, uint8_t remoteCommand, uint16_t extendedCommand)
@@ -31,7 +33,7 @@ static inline Result Ufc23_WriteDWordRAM(ScioSense_Ufc23* ufc23, uint16_t RAMAdd
 {
     Result result = RESULT_IO_ERROR;
     
-    if( (RAMAddress >= UFC23_RAM_USM_ADDRESS_START) && (RAMAddress <= UFC23_RAM_CONFIG_REGISTER_ADDRESS_END) )
+    if( RAMAddress <= UFC23_RAM_CONFIG_REGISTER_ADDRESS_END )
     {
         uint8_t arrayToWrite[6];
     
@@ -93,14 +95,14 @@ static inline Result Ufc23_ReadDWordRAM(ScioSense_Ufc23* ufc23, uint16_t RAMAddr
 {
     Result result = RESULT_IO_ERROR;
 
-    if( ((RAMAddress >= UFC23_RAM_USM_ADDRESS_START) && (RAMAddress <= UFC23_RAM_CONFIG_REGISTER_ADDRESS_END)) || (RAMAddress == UFC23_CR_SR_DEVICE_ID_ADDRESS) )
+    if( (RAMAddress <= UFC23_RAM_CONFIG_REGISTER_ADDRESS_END) || (RAMAddress == UFC23_CR_SR_DEVICE_ID_ADDRESS) )
     {
         uint8_t valuesToWrite[UFC23_COMMAND_BYTES];
         valuesToWrite[0] =  ( (UFC23_REMOTE_COMMAND_RC_RAA_RD    << UFC23_REMOTE_COMMAND_INDEX)      & UFC23_REMOTE_COMMAND_MASK ) | 
         ( (RAMAddress  >> UFC23_RAM_ADDRESS_INDEX_0)  & UFC23_RAM_ADDRESS_MASK_0 );
         valuesToWrite[1] =  ( (RAMAddress  << UFC23_RAM_ADDRESS_INDEX_1)  & UFC23_RAM_ADDRESS_MASK_1 );
 
-        result = transfer(valuesToWrite, UFC23_COMMAND_BYTES, registerContents, 4 * registersToRead);
+        result = read(valuesToWrite, UFC23_COMMAND_BYTES, registerContents, 4 * registersToRead);
     }
     else
     {
@@ -328,20 +330,11 @@ static inline Result Ufc23_TriggerTransducerPortOpenMeasurement(ScioSense_Ufc23*
         result |= Ufc23_WriteDWordRAM(ufc23, UFC23_CR_FRU_EFH_ADDRESS, hardwareError);
 
         // Configure the resistance of the transducer
-        uint32_t crFepAnaCtrl2 = 0x57F01024;
-        uint8_t configuredResistanceRx = UFC23_C_RMSET_RX_GET(crFepAnaCtrl2);
-        uint8_t configuredResistanceTx = UFC23_C_RMSET_TX_GET(crFepAnaCtrl2);
-        
-        uint8_t spoolCheckResistanceRx = configuredResistanceRx >> 1;
-        uint8_t spoolCheckResistanceTx = configuredResistanceTx >> 1;
-        
-        crFepAnaCtrl2 &= ~(UFC23_C_RMSET_RX_Msk | UFC23_C_RMSET_TX_Msk);
-        crFepAnaCtrl2 |= UFC23_C_RMSET_TX_SET(spoolCheckResistanceRx) | UFC23_C_RMSET_RX_SET(spoolCheckResistanceTx);
-
-        result |= Ufc23_WriteDWordRAM(ufc23, UFC23_CR_USM_ANA_CTRL2_ADDRESS, crFepAnaCtrl2);
+        result |= Ufc23_WriteDWordRAM(ufc23, UFC23_CR_USM_ANA_CTRL2_ADDRESS, ufc23->CR[UFC23_CR_FEP_ANA_CTRL2_INDEX]);
 
         // Configure the burst pulse
         uint32_t usmFbgMctrlConfig = ufc23->CR[UFC23_CR_USM_FBG_MCTRL_INDEX] | UFC23_C_FBG_FBNUM_SET(UFC23_C_FBG_FBNUM_MAX_PULSES);
+        
         result |= Ufc23_WriteDWordRAM(ufc23, UFC23_CR_USM_FBG_MCTRL_ADDRESS, usmFbgMctrlConfig);
 
         if( result == RESULT_OK )
@@ -349,6 +342,7 @@ static inline Result Ufc23_TriggerTransducerPortOpenMeasurement(ScioSense_Ufc23*
             result |= Ufc23_ClearFlagRegisters(ufc23);
             result |= Ufc23_WriteRemoteCommand(ufc23, UFC23_REMOTE_COMMAND_RC_STASK_REQ, UFC23_EXTENDED_COMMAND_EC_EHSP_REQ);
         }
+
     }
     
     return result;
@@ -362,9 +356,6 @@ static inline Result Ufc23_CheckTransducerPortOpenMeasurement(ScioSense_Ufc23* u
     {
         UFC23_FR_FE_SIZE frontEndErrorFlags = Ufc23_GetFrontendErrorFlagRegister(ufc23);
         uint8_t spoolNotDetected =  frontEndErrorFlags & (UFC23_FES_USM_HW_ERR_UP | UFC23_FES_USM_HW_ERR_DN);
-
-        // Rewrite the resistance values for normal operation
-        Ufc23_WriteDWordRAM(ufc23, UFC23_CR_USM_ANA_CTRL2_ADDRESS, ufc23->CR[UFC23_CR_FEP_ANA_CTRL2_INDEX]);
 
         if( spoolNotDetected )
         {
@@ -387,6 +378,7 @@ static inline Result Ufc23_SetStandbyState(ScioSense_Ufc23* ufc23)
     Ufc23_GetMode(ufc23);
     uint8_t maxRetries = 2;
     uint8_t retry = 0;
+    
     while( (ufc23->State != UFC23_STATE_STANDBY) && (retry < maxRetries) )
     {
         result &= Ufc23_WriteRemoteCommand(ufc23, UFC23_REMOTE_COMMAND_RC_MM_CTRL, UFC23_EXTENDED_COMMAND_EC_MM_ENA_DISABLED);
@@ -423,13 +415,14 @@ static inline Result Ufc23_EnableMeasureMode(ScioSense_Ufc23* ufc23)
             wait(UFC23_SWITCH_MEAS_MODE_MS);
 
             Ufc23_GetMode(ufc23);
+
             if( ufc23->State == UFC23_STATE_MEAS )
             {
                 result = RESULT_OK;
             }
             break;
         default:
-            result = RESULT_INVALID; 
+            result = RESULT_INVALID;
     }
     
     return result;
@@ -748,7 +741,6 @@ static inline uint8_t Ufc23_ParseAmplitudeRaw(ScioSense_Ufc23* ufc23, uint8_t ba
             newValues++;
         }
     }
-
     return newValues;
 }
 
@@ -764,13 +756,13 @@ static inline uint8_t Ufc23_ParseAmplitudeV(ScioSense_Ufc23* ufc23, uint8_t batc
     
     if( readValues )
     {
-        amplitudesVUp->AMPL1 = (float)(amplitudesRawUp->AMPL1) * UFC23_SAR_LSB_V - ufc23->zeroCrossCalibration;
-        amplitudesVUp->AMPL2 = (float)(amplitudesRawUp->AMPL2) * UFC23_SAR_LSB_V - ufc23->zeroCrossCalibration;
-        amplitudesVUp->AMPL3 = (float)(amplitudesRawUp->AMPL3) * UFC23_SAR_LSB_V - ufc23->zeroCrossCalibration;
+        amplitudesVUp->AMPL1 = ( (float)(amplitudesRawUp->AMPL1) * UFC23_SAR_LSB_V - ufc23->zeroCrossCalibration ) / Ufc23_GetPgaGain(ufc23);
+        amplitudesVUp->AMPL2 = ( (float)(amplitudesRawUp->AMPL2) * UFC23_SAR_LSB_V - ufc23->zeroCrossCalibration ) / Ufc23_GetPgaGain(ufc23);
+        amplitudesVUp->AMPL3 = ( (float)(amplitudesRawUp->AMPL3) * UFC23_SAR_LSB_V - ufc23->zeroCrossCalibration ) / Ufc23_GetPgaGain(ufc23);
         
-        amplitudesVDn->AMPL1 = (float)(amplitudesRawDn->AMPL1) * UFC23_SAR_LSB_V - ufc23->zeroCrossCalibration;
-        amplitudesVDn->AMPL2 = (float)(amplitudesRawDn->AMPL2) * UFC23_SAR_LSB_V - ufc23->zeroCrossCalibration;
-        amplitudesVDn->AMPL3 = (float)(amplitudesRawDn->AMPL3) * UFC23_SAR_LSB_V - ufc23->zeroCrossCalibration;
+        amplitudesVDn->AMPL1 = ( (float)(amplitudesRawDn->AMPL1) * UFC23_SAR_LSB_V - ufc23->zeroCrossCalibration ) / Ufc23_GetPgaGain(ufc23);
+        amplitudesVDn->AMPL2 = ( (float)(amplitudesRawDn->AMPL2) * UFC23_SAR_LSB_V - ufc23->zeroCrossCalibration ) / Ufc23_GetPgaGain(ufc23);
+        amplitudesVDn->AMPL3 = ( (float)(amplitudesRawDn->AMPL3) * UFC23_SAR_LSB_V - ufc23->zeroCrossCalibration ) / Ufc23_GetPgaGain(ufc23);
     }
 
     return readValues;
@@ -779,6 +771,7 @@ static inline uint8_t Ufc23_ParseAmplitudeV(ScioSense_Ufc23* ufc23, uint8_t batc
 static inline uint8_t Ufc23_ParseBatchAmplitudeRaw(ScioSense_Ufc23* ufc23, UFC23_AMP_Raw_TypeDef* amplitudesRawUp, UFC23_AMP_Raw_TypeDef* amplitudesRawDn)
 {
     uint8_t amountMeasurements = Ufc23_GetAmountMeasurementsInBatch(ufc23);
+    
     uint8_t ampMeasurements = 0;
     for (uint8_t batchIndex=0; batchIndex<amountMeasurements; batchIndex++)
     {
@@ -1018,8 +1011,8 @@ static inline uint8_t Ufc23_ParseVddV(ScioSense_Ufc23* ufc23, uint8_t batchIndex
 
     for( uint8_t idx = 0; idx < readValues; idx++ )
     {
-        vdd[idx] = ((float)vddRaw[idx]) * 2.0 * UFC23_SAR_LSB_V;
-        vcc[idx] = ((float)vccRaw[idx]) * 3.0 * UFC23_SAR_LSB_V;
+        vdd[idx] = ((float)vddRaw[idx]) * UFC23_VDD_LSB_MULTIPLIER * UFC23_SAR_LSB_V;
+        vcc[idx] = ((float)vccRaw[idx]) * UFC23_VCC_LSB_MULTIPLIER * UFC23_SAR_LSB_V;
     }
 
     return readValues;
@@ -1051,7 +1044,7 @@ static inline uint8_t Ufc23_ParseHccCalibRaw(ScioSense_Ufc23* ufc23, uint8_t bat
             uint32_t hccCalibrationValues = Ufc23_ParseUsmBatchDWordValue(ufc23, batchIndex, UFC23_USM_BUNDLE_HCC_CALIB_ADDRESS);
             *hccCalibration = (hccCalibrationValues & UFC23_USM_BUNDLE_HCC_CALIB_Msk) >> UFC23_USM_BUNDLE_HCC_CALIB_Pos;
             Ufc23_UpdateCorrectionFactorHso(ufc23, *hccCalibration, UFC23_LSO_NOMINAL_FREQUENCY_HZ);
-            
+                        
             newValues++;
         }
     }
@@ -1139,7 +1132,14 @@ static inline uint8_t Ufc23_ParseSingleCycleUsTofHitsRaw(ScioSense_Ufc23* ufc23,
         if( batchStatus & UFC23_FES_USM_TOF_MULTI_UPDATED )
         {
             Ufc23_ParseTofMultiHitsCount(ufc23, 0, amountHitsUp, amountHitsDn);
-
+            if( amountHitsUp[0] > 60 )
+            {
+                amountHitsUp[0] = 0;
+            }
+            if( amountHitsDn[0] > 60 )
+            {
+                amountHitsDn[0] = 0;
+            }
             for( uint8_t newValuesUp = 0; newValuesUp < *amountHitsUp; newValuesUp++)
             {
                 usTofHitUp[newValuesUp] = Ufc23_ParseUsmDWordValue(ufc23, UFC23_USM_SINGLE_CYCLE_US_TOF_HIT_UP_1 + newValuesUp);
@@ -1150,7 +1150,7 @@ static inline uint8_t Ufc23_ParseSingleCycleUsTofHitsRaw(ScioSense_Ufc23* ufc23,
                 usTofHitDn[newValuesDn] = Ufc23_ParseUsmDWordValue(ufc23, UFC23_USM_SINGLE_CYCLE_US_TOF_HIT_DN_1 + newValuesDn);
             }
 
-            if( *amountHitsUp >= *amountHitsDn )
+            if( *amountHitsUp < *amountHitsDn )
             {
                 newValues = *amountHitsDn;
             }
@@ -1282,23 +1282,93 @@ static inline UFC23_BATCH_AMOUNT_SIZE Ufc23_GetAmountMeasurementsInBatch(ScioSen
     return ufc23->cyclesInBatch;
 }
 
+static inline float Ufc23_GetPgaGain(ScioSense_Ufc23* ufc23)
+{
+    return ufc23->pgaGain;
+}
+
+static inline void Ufc23_UpdateGain(ScioSense_Ufc23* ufc23)
+{
+    float ufc23_gain_st1[] = {  UFC23_PGA_ST1_GAIN_00,
+                                UFC23_PGA_ST1_GAIN_01,
+                                UFC23_PGA_ST1_GAIN_02,
+                                UFC23_PGA_ST1_GAIN_03,
+                                UFC23_PGA_ST1_GAIN_04,
+                                UFC23_PGA_ST1_GAIN_05,
+                                UFC23_PGA_ST1_GAIN_06,
+                                UFC23_PGA_ST1_GAIN_07,
+                                UFC23_PGA_ST1_GAIN_08,
+                                UFC23_PGA_ST1_GAIN_09,
+                                UFC23_PGA_ST1_GAIN_10,
+                                UFC23_PGA_ST1_GAIN_11,
+                                UFC23_PGA_ST1_GAIN_12,
+                                UFC23_PGA_ST1_GAIN_13,
+                                UFC23_PGA_ST1_GAIN_14,
+                                UFC23_PGA_ST1_GAIN_15,
+                                UFC23_PGA_ST1_GAIN_16,
+                                UFC23_PGA_ST1_GAIN_17,
+                                UFC23_PGA_ST1_GAIN_18,
+                                UFC23_PGA_ST1_GAIN_19,
+                                UFC23_PGA_ST1_GAIN_20,
+                                UFC23_PGA_ST1_GAIN_21,
+                                UFC23_PGA_ST1_GAIN_22,
+                                UFC23_PGA_ST1_GAIN_23,
+                                UFC23_PGA_ST1_GAIN_24,
+                                UFC23_PGA_ST1_GAIN_25,
+                                UFC23_PGA_ST1_GAIN_26,
+                                UFC23_PGA_ST1_GAIN_27,
+                                UFC23_PGA_ST1_GAIN_28,
+                                UFC23_PGA_ST1_GAIN_29,
+                                UFC23_PGA_ST1_GAIN_30,
+                                UFC23_PGA_ST1_GAIN_31};
+
+    float ufc23_gain_st2[] = {  UFC23_PGA_ST2_GAIN_0,
+                                UFC23_PGA_ST2_GAIN_1,
+                                UFC23_PGA_ST2_GAIN_2,
+                                UFC23_PGA_ST2_GAIN_3};
+    float st2Gain = 1;
+
+    if( !(ufc23->Param.CR_AE.C_PGA_ST2_CBYP) )
+    {
+        // Second stage not bypassed
+        st2Gain = ufc23_gain_st2[ufc23->Param.CR_AE.C_PGA_ST2_GAIN];
+    }
+
+    float st1Gain = 1;
+    if( !(ufc23->Param.CR_AE.C_PGA_ST1_CBYP) && !(ufc23->Param.CR_AE.C_PGA_G1_OPEN) )
+    {
+        // First stage not bypassed
+        st1Gain = ufc23_gain_st1[ufc23->Param.CR_AE.C_PGA_ST1_GAIN];
+    }
+    ufc23->pgaGain = st1Gain * st2Gain;
+}
+
 static inline void Ufc23_UpdateCorrectionFactorHso(ScioSense_Ufc23* ufc23, uint32_t rmHsoCalib, float lsoNominalFrequencyHz)
 {
-    float hsoNominalFrequencyHz = UFC23_HSO_FREQUENCY_CONVERSION_FACTOR_MHZ * ufc23->Param.CR_A7.C_FEP_4M_CLK_DIV;
+    float hsoNominalFrequencyHz = (float)(UFC23_HSO_FREQUENCY_CONVERSION_FACTOR_MHZ * ufc23->Param.CR_A7.C_FEP_4M_CLK_DIV);
     float correctionFactor = 4.0 * hsoNominalFrequencyHz * 65536.0 / ((float)rmHsoCalib) / lsoNominalFrequencyHz;
-    ufc23->correctionFactorHso = correctionFactor;
     Ufc23_UpdatePulseWidthLsb(ufc23, correctionFactor, hsoNominalFrequencyHz);
     Ufc23_UpdateTimeOfFlightLsb(ufc23, correctionFactor, hsoNominalFrequencyHz);
 }
 
 static inline void Ufc23_UpdatePulseWidthLsb(ScioSense_Ufc23* ufc23, float correctionFactor, float nominalFrequencyHz)
 {
-    ufc23->pwLsbNs = UFC23_NANOSECONDS_IN_A_SECOND / ( correctionFactor * nominalFrequencyHz * UFC23_PW_LSB_PRESCALER );
+    ufc23->pwLsbNs = correctionFactor * UFC23_NANOSECONDS_IN_A_SECOND / ( nominalFrequencyHz * UFC23_PW_LSB_PRESCALER );
+}
+
+static inline float Ufc23_GetPulseWidthLsb(ScioSense_Ufc23* ufc23)
+{
+    return ufc23->pwLsbNs;
 }
 
 static inline void Ufc23_UpdateTimeOfFlightLsb(ScioSense_Ufc23* ufc23, float correctionFactor, float nominalFrequencyHz)
 {
-    ufc23->tofLsbNs = UFC23_NANOSECONDS_IN_A_SECOND / ( correctionFactor * nominalFrequencyHz * UFC23_TOF_LSB_PRESCALER );
+    ufc23->tofLsbNs = correctionFactor * UFC23_NANOSECONDS_IN_A_SECOND / ( nominalFrequencyHz * UFC23_TOF_LSB_PRESCALER );
+}
+
+static inline float Ufc23_GetTimeOfFlightLsbNs(ScioSense_Ufc23* ufc23)
+{
+    return ufc23->tofLsbNs;
 }
 
 static inline void Ufc23_SetConfigurationRegisters(ScioSense_Ufc23* ufc23, uint32_t* registerConfiguration)
@@ -1313,8 +1383,8 @@ static inline void Ufc23_SetConfigurationRegisters(ScioSense_Ufc23* ufc23, uint3
 static inline void Ufc23_InitializeConfiguration(ScioSense_Ufc23* ufc23)
 {
     uint8_t registersToWrite[] = {
-        0xA0,   0xA1,   0xA2,   0xA3,   0xA4,   0xA5,   0xA6,   0xA7,           0xA9,   0xAA,   0xAB,   0xAC,   0xAD,   0xAE,   0xAF,
-        0xB0,   0xB1,   0xB2
+        0xA0, 0xA1, 0xA2, 0xA3, 0xA4, 0xA5, 0xA6, 0xA7, 0xA8, 0xA9, 0xAA, 0xAB, 0xAC, 0xAD, 0xAE, 0xAF,
+        0xB0, 0xB1, 0xB2
     };
 
     for( uint8_t idx=0; idx<UFC23_AMOUNT_CONFIGURATION_REGISTERS; idx++ )
@@ -1333,7 +1403,7 @@ static inline void Ufc23_InitializeConfiguration(ScioSense_Ufc23* ufc23)
         0x00003080,     // 0xA5
         0x00000E79,     // 0xA6
         0x00008385,     // 0xA7
-
+        0x00000000,     // 0xA8
         0x04900000,     // 0xA9
         0xC0090002,     // 0xAA
         0x00000502,     // 0xAB
@@ -1377,7 +1447,7 @@ static inline Result Ufc23_GetPartId(ScioSense_Ufc23* ufc23)
             result = RESULT_INVALID;
         }
     }
-    
+
     return result;
 }
 
@@ -1550,6 +1620,7 @@ static inline void Ufc23_UpdateParameters(ScioSense_Ufc23* ufc23)
     ufc23->Param.CR_B2.C_USM_MASK_HR_WIN_DN     = UFC23_C_USM_MASK_HR_WIN_DN_GET(   ufc23->CR[UFC23_CR_USM_MASK_HR_WIN_INDEX] );
 
     Ufc23_UpdateAmountBundlesInBatch(ufc23);
+    Ufc23_UpdateGain(ufc23);
 }
 
 static inline void Ufc23_UpdateConfiguration(ScioSense_Ufc23* ufc23)
@@ -1719,11 +1790,14 @@ static inline void Ufc23_UpdateConfiguration(ScioSense_Ufc23* ufc23)
     ufc23->CR[UFC23_CR_USM_MASK_HR_WIN_INDEX]   |= UFC23_C_USM_MASK_HR_WIN_DN_SET   (ufc23->Param.CR_B2.C_USM_MASK_HR_WIN_DN );
 
     Ufc23_UpdateAmountBundlesInBatch(ufc23);
+    Ufc23_UpdateGain(ufc23);
 }
 
+#undef read
+#undef write
 #undef wait
 #undef hasAnyFlag
 #undef hasFlag
 #undef memcpy
 
-#endif // SCIOSENSE_ENS21X_INL_C_H
+#endif // SCIOSENSE_UFC23_INL_C_H

@@ -28,6 +28,9 @@ class UFC23 : public ScioSense_Ufc23
         void            updateConfiguration                 ();                                                                                 // Update the configuration settings of the UFC23. To be used after modifying the configuration structs manually
         Result          readConfig                          ();                                                                                 // Reads the current configuration on the device and updates the internal registers
         Result          writeConfig                         ();                                                                                 // Write and check the configuration into the UFC23
+        float           getPgaGain                          ();                                                                                 // Returns the PGA gain that the configuration has for the ultrasound input
+        float           getTofLsbNs                         ();                                                                                 // Returns the LSB of the time of Flight raw measurements in nanoseconds
+        float           getPWLsb                            ();                                                                                 // Returns the LSB of the Pulse Width raw measurements
         void            setConfigurationRegisters           (uint32_t* configurationRegisters);                                                 // Set the configuration from an array containing the values for registers 0xA0-0xA7 and 0xA9-0xB2
         Result          startMeasurement                    ();                                                                                 // Perform soft reset and turn the Measure Cycle Timer on
 
@@ -36,7 +39,7 @@ class UFC23 : public ScioSense_Ufc23
         uint16_t        getErrors                           ();                                                                                 // Get the Frondend Error flags values from the last data update
         bool            isMeasuring                         ();                                                                                 // Returns true if the device has been configured and is measuring data
         uint8_t         errorToStrings                      (uint32_t errorRegisterContent, char errorStrings[UFC23_AMOUNT_FRONTEND_ERROR_FLAGS][ERROR_STRING_LENGTH]); // Fills the string array with descriptions for the provided errors
-        const char*     partIdToString                      (Ufc23_PartID partId);                                                              // Returns a string that corresponds to the Part ID of the device
+        const char*     partIdToString                      (Ufc23_PartID partIdNumber);                                                        // Returns a string that corresponds to the Part ID of the device
 
     public:
         uint8_t         readCommunicationFlags              ();                                                                                 // Reads the Communication flag register from the device

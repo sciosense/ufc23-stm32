@@ -29,8 +29,8 @@ void UFC23::begin(SPI_HandleTypeDef* spi, uint16_t cs_pin, GPIO_TypeDef* port)
     spiConfig.cs_pin    = cs_pin;
     spiConfig.port      = port;
 
-    io.transfer         = ScioSense_STM32_Spi_Transfer;
-    io.write            = ScioSense_STM32_Spi_Write_Data;
+    io.read             = ScioSense_STM32_Spi_Read;
+    io.write            = ScioSense_STM32_Spi_Write;
     io.wait             = ScioSense_STM32_Wait;
     io.config           = &spiConfig;
 }
@@ -212,7 +212,7 @@ uint16_t UFC23::readFrontendErrorFlags()
     Result result = Ufc23_ReadRemoteCommand(this, UFC23_REMOTE_COMMAND_RC_FRU_RD, UFC23_EXTENDED_COMMAND_RC_FES_RD, dataReceived, UFC23_COMMAND_RESPONSE_RC_FES_RD_LENGTH);
     if( result == RESULT_OK )
     {
-        dataOut = ((uint16_t)dataReceived[0] << 16) + ((uint16_t)dataReceived[1]);
+        dataOut = ((uint16_t)dataReceived[0] << 8) + ((uint16_t)dataReceived[1]);
     }
     return dataOut;
 }
@@ -297,6 +297,16 @@ uint32_t UFC23::writeRamAddress(uint16_t ramAddress, uint32_t registerContent)
     return Ufc23_WriteDWordRAM(this, ramAddress, registerContent);
 }
 
+float UFC23::getTofLsbNs()
+{
+    return Ufc23_GetTimeOfFlightLsbNs(this);
+}
+
+float UFC23::getPWLsb()
+{
+    return Ufc23_GetPulseWidthLsb(this);
+}
+
 float UFC23::getHighSpeedClockFrequencyHz()
 {
     float hsoMhz[UFC23_AMOUNT_BUNDLES_MAX];
@@ -335,9 +345,9 @@ uint16_t UFC23::getErrors()
     return Ufc23_ErrorsPresentInLastUpdate(this);
 }
 
-const char* UFC23::partIdToString(Ufc23_PartID partId)
+const char* UFC23::partIdToString(Ufc23_PartID partIdNumber)
 {
-    uint8_t partIdIdx = (uint8_t)partId;
+    uint8_t partIdIdx = (uint8_t)partIdNumber;
     if( partIdIdx >= UFC23_AMOUNT_PART_ID_TYPES )
     {
         partIdIdx = UFC23_AMOUNT_PART_ID_TYPES - 1;
@@ -372,6 +382,11 @@ bool UFC23::isSpoolWorkingWell()
 void UFC23::updateConfiguration()
 {
     Ufc23_UpdateConfiguration(this);
+}
+
+float UFC23::getPgaGain()
+{
+    return Ufc23_GetPgaGain(this);
 }
 
 void UFC23::setConfigurationRegisters(uint32_t* configurationRegisters)
