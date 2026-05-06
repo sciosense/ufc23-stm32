@@ -39,12 +39,12 @@ extern "C" void UFC23_Example_Setup(UART_HandleTypeDef *uart, SPI_HandleTypeDef 
     uint32_t configRegisters[UFC23_AMOUNT_CONFIGURATION_REGISTERS] =
     {
         0x0000001C,     // A0
-        0x00000000,     // A1
+        0x00000FF1,     // A1
         0x000006DB,     // A2
         0x00000010,     // A3
         0x000017AF,     // A4
         0x0000B100,     // A5
-        0x00011249,     // A6
+        0x00001249,     // A6
         0x000194F4,     // A7
         0x00000000,     // A8
         0x04900000,     // A9

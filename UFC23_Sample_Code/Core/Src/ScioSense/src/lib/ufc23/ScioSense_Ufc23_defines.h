@@ -32,6 +32,7 @@
 #define UFC23_RAM_USM_ADDRESS_END                       (159)           // End of the RAM section dedicated to the Main Task Results (USM)
 #define UFC23_RAM_CONFIG_REGISTER_ADDRESS_START         (160)           // Start of the RAM section dedicated to the Configuration Registers
 #define UFC23_RAM_CONFIG_REGISTER_ADDRESS_END           (191)           // End of the RAM section dedicated to the Configuration Registers
+#define UFC23_AMOUNT_POINTS_SPEED_SOUND_TABLE           (12)            //
 
 /******************************* UFC23 constants *****************************/
 
@@ -199,6 +200,7 @@ typedef uint16_t Ufc23_ExtendedCommands;
 #define UFC23_CR_USM_HIT_CTRL_ADDRESS                   (0xB0)          // Ultrasonic hit control
 #define UFC23_CR_USM_WVM_ADDRESS                        (0xB1)          // Ultrasonic wave monitor
 #define UFC23_CR_USM_MASK_HR_WIN_ADDRESS                (0xB2)          // High resolution receiver mask in up direction
+#define UFC23_CR_SHR_DEBUG                              (0xDF)          // Reserved
 #define UFC23_CR_SR_DEVICE_ID_ADDRESS                   (0xFF)          // Identification of UFC23 or UFC18
 
 //// Index of CR configuration registers array

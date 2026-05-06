@@ -406,6 +406,7 @@ static inline uint8_t                   Ufc23_ParseBatchTofMultiHitsCount       
 static inline uint8_t                   Ufc23_ParseBatchVddV                        (ScioSense_Ufc23* ufc23, float* vdd, float* vcc);                                                               // Returns the supply voltage values in volts from all the measurement bundels in the batch
 static inline uint8_t                   Ufc23_ParseBatchHsoMhz                      (ScioSense_Ufc23* ufc23, float* fHsoMhz);                                                                       // Returns the High Speed Oscillator frequencies in MHz from all the measurement bundels in the batch
 static inline uint8_t                   Ufc23_ParseBatchZcLvlV                      (ScioSense_Ufc23* ufc23, float* zcLvl);                                                                         // Returns the Zero Cross Level values in volts from all the measurement bundels in the batch
+static inline float                     UFC23_GetWaterSpeedSoundFromTemperature     (float temperature);                                                                                            // Returns the speed of sound in fresh water corresponding to the indicated temperature
 
 #include "ScioSense_Ufc23.inl.h"
 #endif // SCIOSENSE_UFC23_C_H

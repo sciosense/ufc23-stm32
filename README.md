@@ -109,6 +109,22 @@ The project has several examples:
     - Bundle number
     - Average multihit ToF sum upstream and downstream
     - Difference in ToF
+- **09_Split_Burst**
+  - Single ended connection (transducer connected between XL and GNDP)
+  - Reads single ultrasonic measurement
+  - Fires a split burst (introduces a phase shift in the fire pulses)
+  - Reports
+    - Average multihit ToF sum upstream and downstream
+    - Difference in ToF
+    - Location of the phase shift
+    - Corrected ToF using the phase shift position
+- **10_Flow_Conversion**
+  - Single ended connection (transducer connected between XL and GNDP)
+  - Reads single ultrasonic measurement
+  - Calculates the flow from the ToF difference and the geometry of the transducer
+  - Runs a filter on the acquired data
+  - Reports
+    - Filtered and unfiltered calculated flow
 
 There is one Build configuration for each example.
 
@@ -126,19 +142,21 @@ The examples set the UFC23 configuration by setting the contents of the register
 The configuration is only written to the device when the function _ufc23.writeConfig()_ is called.
 
 ### Transducer
-The examples contains a configuration that is ready to be used with the [Audiowell ultrasound transducer HS0014-007](https://www.audiowell.com/flowsensorwithpipe/80.html). The configuration must be adapted for your specific transducer.
+The examples contains a configuration that is ready to be used with the [Audiowell ultrasound transducer HS0014-007](https://www.audiowell.com/flowsensorwithpipe/80.html). The exemption is the **06_Gas** example, where the transducers are [Jiakang Electronics PSC500K018060H2AD2-B1](https://en.jkelec.com/index.php?c=content&a=show&id=404). The configuration must be adapted for your specific transducer.
 
 The following registers must be reviewed in particular:
 - CR_USM_PROC (Ultrasonic processing) (Address 0xAA)
   - C_USM_MASK_WIN: Mask window, depends on the the length of the transducer
 - CR_USM_FBG_MCTRL (Fire burst generator control) (Address 0xAB)
   - C_FBG_LR_CLK_DIV: Divider to select a fire frequency that coincides with the resonance of the transducer
+  - C_FBG_FBNUM: Amount of pulses to fire
 - CR_USM_ANA_CTRL2 (analog control) (Address 0xAE)
-  - C_RMSET_TX: resistance of the transducer
-  - C_RMSET_RX: resistance of the transducer
+  - C_RMSET_TX: resistance of the transmit transducer
+  - C_RMSET_RX: resistance of the receive transducer
   - C_PGA_ST1_GAIN: gain of first PGA stage. If more amplification is needed consider using differential mode and the second PGA stage
 - CR_USM_HIT_CTRL (Ultrasonic hit control) (Address 0xB0)
-  - C_TOF_MULTIHIT_NO: Number of hits to fire. The firing of pulses should be completed before the echoes arrive back to the firing transducer
+  - C_TOF_HIT_NO: Number of hits to store in RAM.
+  - C_TOF_MULTIHIT_NO: Number of hits to use to calculate the multi-hit summation.
 - CR_USM_MASK_HR_WIN (High resolution receiver mask in up direction) (Address 0xB2)
   - C_USM_MASK_HR_WIN_DN: can be used to fine tune the mask window
   - C_USM_MASK_HR_WIN_UP: can be used to fine tune the mask window

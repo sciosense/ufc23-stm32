@@ -1,15 +1,29 @@
 #include "Example_Definitions.h"
 #include "UFC23_Utils.h"
 #include "src/ScioSense_UFC23.h"
+#include "src/ufc23_adaptive_filter.h"
 #include <cstdio>
 #include <cstring>
+
+#define UFC23_NS_TO_S                   0.000000001 // Conversion from nanoseconds to seconds
+#define UFC23_M3_TO_L                   1000.0      // Conversion from m3 to litres
+#define UFC23_HOUR_TO_SECONDS           3600.0      // Conversion from hours to seconds
+#define UFC23_PI                        3.1415      // Value of the constant pi
+
+#define WATER_SOUND_SPEED_M_S           1480.0      // Speed of sound in meters per second. It is best to calculate it from the water temperature
+
+#define DISTANCE_BETWEEN_TRANSDUCERS_M  0.062       // Distance between the upstream and downstream transducers in meters
+#define TRANSDUCER_CROSS_SECTION_M2     0.000113    // Cross section area of the transducer at the point where the ultrasound waves travel in meters squared
+#define ANGLE_TRANSDUCERS_FLOW_DEGREES  0           // Angle in degrees between the path of the ultrasound and the direction of the flow in degrees
 
 static char messageBuffer[128];         // Buffer for sending data through Serial
 uint8_t interruptAsserted = 0;
 
 UFC23 ufc23;
+Ufc23Filter ufc23Filter;
 
 float tofAvgUp[UFC23_AMOUNT_BUNDLES_MAX], tofAvgDn[UFC23_AMOUNT_BUNDLES_MAX];
+float conversionTof2Flow;
 
 extern "C" void UFC23_Example_Setup(UART_HandleTypeDef *uart, SPI_HandleTypeDef *spi)
 {
@@ -18,7 +32,7 @@ extern "C" void UFC23_Example_Setup(UART_HandleTypeDef *uart, SPI_HandleTypeDef 
     /* Wait to allow terminal software to capture the output */
     HAL_Delay(2000);
 
-    SerialPrint("\nStarting UFC23 06_Gas demo on STM32...\n");
+    SerialPrint("\nStarting UFC23 01_Basic demo on STM32...\n");
 
     HAL_Delay(UFC23_T_RC_RLS_MS);
 
@@ -33,26 +47,26 @@ extern "C" void UFC23_Example_Setup(UART_HandleTypeDef *uart, SPI_HandleTypeDef 
     SerialPrint(ufc23.partIdToString(ufc23.partId));
     SerialPrint(" initialized properly\n");
 
-    // Differential configuration
+    // Single ended configuration
     uint32_t configRegisters[UFC23_AMOUNT_CONFIGURATION_REGISTERS] =
     {
         0x0000001C,     // A0
-        0x00000FF1,     // A1
+        0x00000030,     // A1
         0x000006DB,     // A2
         0x00000010,     // A3
         0x000017AF,     // A4
         0x0000B100,     // A5
         0x00001249,     // A6
-        0x00019AF4,     // A7
+        0x000194F4,     // A7
         0x00000000,     // A8
         0x04900000,     // A9
-        0xC00F00D7,     // AA
-        0x0000061C,     // AB
+        0xC00F0034,     // AA
+        0x0000140E,     // AB
         0x00000000,     // AC
         0x0808B00E,     // AD
-        0x01F070F8,     // AE
+        0x46301024,     // AE
         0x0FFFFFFF,     // AF
-        0x00008048,     // B0
+        0x0001424E,     // B0
         0x20412424,     // B1
         0x00000000      // B2
     };
@@ -82,6 +96,10 @@ extern "C" void UFC23_Example_Setup(UART_HandleTypeDef *uart, SPI_HandleTypeDef 
     {
         SerialPrint("Error! Measurements didn't start properly\n");
     }
+
+    float conversionTof2Speed   = WATER_SOUND_SPEED_M_S * WATER_SOUND_SPEED_M_S * cosf(ANGLE_TRANSDUCERS_FLOW_DEGREES * UFC23_PI / 180) * UFC23_NS_TO_S / ( 2.0 * DISTANCE_BETWEEN_TRANSDUCERS_M ) ;
+    float conversionSpeed2Flow  = TRANSDUCER_CROSS_SECTION_M2 * UFC23_HOUR_TO_SECONDS * UFC23_M3_TO_L;
+    conversionTof2Flow          = conversionTof2Speed * conversionSpeed2Flow;
 }
 
 extern "C" void UFC23_Example_Loop()
@@ -94,9 +112,16 @@ extern "C" void UFC23_Example_Loop()
             {
                 // Print the averaged hit sums
                 uint8_t amountMultiHitMeas = ufc23.getAverageHitNs(tofAvgUp, tofAvgDn);
+
                 if( amountMultiHitMeas )
                 {
-                    sprintf(messageBuffer, "AvgTofUp[ns]:%0.2f\tAvgTofDn[ns]:%0.2f\tTofDiff[ns]:%0.3f\n", tofAvgUp[0], tofAvgDn[0], tofAvgUp[0] - tofAvgDn[0]);
+                    float difTofNs = tofAvgUp[0] - tofAvgDn[0];
+                    float filteredDifTofNs = ufc23Filter.ApplyFilter(difTofNs);
+                    
+                    float unFilteredFlowLPH = conversionTof2Flow * difTofNs;
+                    float filteredFlowLPH   = conversionTof2Flow * filteredDifTofNs;
+                    
+                    sprintf(messageBuffer, "UnfilteredFlow[LPH]:%0.2f\tFilteredFlow[LPH]:%0.2f\n", unFilteredFlowLPH, filteredFlowLPH);
                     SerialPrint(messageBuffer);
                 }
             }

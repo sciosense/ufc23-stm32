@@ -56,6 +56,8 @@
 **/06_Gas/
 **/07_Low_Power_Mode/
 **/08_Ultra_Low_Power_Mode/
+**/09_Split_Burst/
+**/10_Flow_Conversion/
 
 # Kernel Module Compile Results
 *.mod*
