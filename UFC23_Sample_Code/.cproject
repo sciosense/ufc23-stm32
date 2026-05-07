@@ -87,8 +87,11 @@
 							<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec.712211277" name="MCU Output Converter Motorola S-rec with symbols" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec"/>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.708280872.988232521" name="09_Split_Burst.cpp" rcbsApplicability="disable" resourcePath="Core/Src/ScioSense/09_Split_Burst.cpp" toolsToInvoke="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.1632183326.1722034842">
+						<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.1632183326.1722034842" name="MCU/MPU G++ Compiler" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.1632183326"/>
+					</fileInfo>
 					<sourceEntries>
-						<entry excluding="Src/ScioSense/00_Chi_Individual_Hits.cpp|Src/ScioSense/08_Ultra_Low_Power_Mode.cpp|Src/ScioSense/07_Low_Power_Mode.cpp|Src/ScioSense/06_Gas.cpp|Src/ScioSense/02_Batch.cpp|Src/ScioSense/03_Signal_Values.cpp|Src/ScioSense/05_Temperature.cpp|Src/ScioSense/04_Individual_Hits.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
+						<entry excluding="Src/ScioSense/09_Split_Burst.cpp|Src/ScioSense/10_Flow_Conversion.cpp|Src/ScioSense/00_Chi_Individual_Hits.cpp|Src/ScioSense/08_Ultra_Low_Power_Mode.cpp|Src/ScioSense/07_Low_Power_Mode.cpp|Src/ScioSense/06_Gas.cpp|Src/ScioSense/02_Batch.cpp|Src/ScioSense/03_Signal_Values.cpp|Src/ScioSense/05_Temperature.cpp|Src/ScioSense/04_Individual_Hits.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
 					</sourceEntries>
 				</configuration>
@@ -176,8 +179,11 @@
 							<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec.1368726138" name="MCU Output Converter Motorola S-rec with symbols" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec"/>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.release.923938882.1453235712" name="09_Split_Burst.cpp" rcbsApplicability="disable" resourcePath="Core/Src/ScioSense/09_Split_Burst.cpp" toolsToInvoke="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.2752791.248501719">
+						<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.2752791.248501719" name="MCU/MPU G++ Compiler" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.2752791"/>
+					</fileInfo>
 					<sourceEntries>
-						<entry excluding="Src/ScioSense/00_Chi_Individual_Hits.cpp|Src/ScioSense/08_Ultra_Low_Power_Mode.cpp|Src/ScioSense/07_Low_Power_Mode.cpp|Src/ScioSense/06_Gas.cpp|Src/ScioSense/02_Batch.cpp|Src/ScioSense/03_Signal_Values.cpp|Src/ScioSense/05_Temperature.cpp|Src/ScioSense/04_Individual_Hits.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
+						<entry excluding="Src/ScioSense/09_Split_Burst.cpp|Src/ScioSense/10_Flow_Conversion.cpp|Src/ScioSense/00_Chi_Individual_Hits.cpp|Src/ScioSense/08_Ultra_Low_Power_Mode.cpp|Src/ScioSense/07_Low_Power_Mode.cpp|Src/ScioSense/06_Gas.cpp|Src/ScioSense/02_Batch.cpp|Src/ScioSense/03_Signal_Values.cpp|Src/ScioSense/05_Temperature.cpp|Src/ScioSense/04_Individual_Hits.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
 					</sourceEntries>
 				</configuration>
@@ -270,6 +276,9 @@
 							<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec.177579142" name="MCU Output Converter Motorola S-rec with symbols" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec"/>
 						</toolChain>
 					</folderInfo>
+					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.708280872.1924763929.244279115" name="10_Flow_Conversion.cpp" rcbsApplicability="disable" resourcePath="Core/Src/ScioSense/10_Flow_Conversion.cpp" toolsToInvoke="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.1156211462.833679456">
+						<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.1156211462.833679456" name="MCU/MPU G++ Compiler" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.1156211462"/>
+					</fileInfo>
 					<sourceEntries>
 						<entry excluding="Src/ScioSense/10_Flow_Conversion.cpp|Src/ScioSense/09_Split_Burst.cpp|Src/ScioSense/00_Chi_Individual_Hits.cpp|Src/ScioSense/08_Ultra_Low_Power_Mode.cpp|Src/ScioSense/07_Low_Power_Mode.cpp|Src/ScioSense/06_Gas.cpp|Src/ScioSense/02_Batch.cpp|Src/ScioSense/03_Signal_Values.cpp|Src/ScioSense/04_Individual_Hits.cpp|Src/ScioSense/05_Temperature.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>
@@ -1026,8 +1035,8 @@
 							<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec.1382454148" name="MCU Output Converter Motorola S-rec with symbols" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.708280872.1924763929.1117990386.181617440" name="01_Basic.cpp" rcbsApplicability="disable" resourcePath="Core/Src/ScioSense/01_Basic.cpp" toolsToInvoke="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.745368955.1925577083">
-						<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.745368955.1925577083" name="MCU/MPU G++ Compiler" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.745368955"/>
+					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.708280872.1924763929.1117990386.1366099743" name="10_Flow_Conversion.cpp" rcbsApplicability="disable" resourcePath="Core/Src/ScioSense/10_Flow_Conversion.cpp" toolsToInvoke="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.745368955.356837165">
+						<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.745368955.356837165" name="MCU/MPU G++ Compiler" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.745368955"/>
 					</fileInfo>
 					<sourceEntries>
 						<entry excluding="Src/ScioSense/01_Basic.cpp|Src/ScioSense/10_Flow_Conversion.cpp|Src/ScioSense/00_Chi_Individual_Hits.cpp|Src/ScioSense/08_Ultra_Low_Power_Mode.cpp|Src/ScioSense/07_Low_Power_Mode.cpp|Src/ScioSense/06_Gas.cpp|Src/ScioSense/02_Batch.cpp|Src/ScioSense/03_Signal_Values.cpp|Src/ScioSense/04_Individual_Hits.cpp|Src/ScioSense/05_Temperature.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
@@ -1123,8 +1132,8 @@
 							<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec.2102961435" name="MCU Output Converter Motorola S-rec with symbols" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.objcopy.symbolsrec"/>
 						</toolChain>
 					</folderInfo>
-					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.708280872.152513885.1097932247" name="01_Basic.cpp" rcbsApplicability="disable" resourcePath="Core/Src/ScioSense/01_Basic.cpp" toolsToInvoke="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.1711442348.57418532">
-						<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.1711442348.57418532" name="MCU/MPU G++ Compiler" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.1711442348"/>
+					<fileInfo id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.708280872.152513885.2105419915" name="09_Split_Burst.cpp" rcbsApplicability="disable" resourcePath="Core/Src/ScioSense/09_Split_Burst.cpp" toolsToInvoke="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.1711442348.1199433342">
+						<tool id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.1711442348.1199433342" name="MCU/MPU G++ Compiler" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.cpp.compiler.1711442348"/>
 					</fileInfo>
 					<sourceEntries>
 						<entry excluding="Src/ScioSense/01_Basic.cpp|Src/ScioSense/09_Split_Burst.cpp|Src/ScioSense/00_Chi_Individual_Hits.cpp|Src/ScioSense/08_Ultra_Low_Power_Mode.cpp|Src/ScioSense/07_Low_Power_Mode.cpp|Src/ScioSense/06_Gas.cpp|Src/ScioSense/02_Batch.cpp|Src/ScioSense/03_Signal_Values.cpp|Src/ScioSense/05_Temperature.cpp|Src/ScioSense/04_Individual_Hits.cpp" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
