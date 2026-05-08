@@ -27,7 +27,7 @@ extern "C" void UFC23_Example_Setup(UART_HandleTypeDef *uart, SPI_HandleTypeDef 
     /* Wait to allow terminal software to capture the output */
     HAL_Delay(2000);
 
-    SerialPrint("\nStarting UFC23 01_Basic demo on STM32...\n");
+    SerialPrint("\nStarting UFC23 09_Split_Burst demo on STM32...\n");
 
     HAL_Delay(UFC23_T_RC_RLS_MS);
 
