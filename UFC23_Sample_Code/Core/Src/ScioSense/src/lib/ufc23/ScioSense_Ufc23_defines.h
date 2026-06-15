@@ -42,6 +42,7 @@
 #define UFC23_VDD_LSB_MULTIPLIER                        (1.97)          // Multiplier of SAR_LSB to obtain the LSB of the VDD measurement
 #define UFC23_SAR_LSB_NUMERATOR                         (14)            // Numerator of the LSB value of the SAR used for measuring voltages
 #define UFC23_SAR_LSB_DENOMINATOR                       (10240)         // Denominator of the LSB value of the SAR used for measuring voltages
+#define UFC23_FHL_LSB_V                                 (0.00137)       // LSB value of the First Hit Level configuration. Float value in Volts
 #define UFC23_LSO_NOMINAL_FREQUENCY_HZ                  (32768)         // Nominal frequency of the Low Speed Oscillator
 
 //// UFC23 timing constants
@@ -201,7 +202,7 @@ typedef uint16_t Ufc23_ExtendedCommands;
 #define UFC23_CR_USM_WVM_ADDRESS                        (0xB1)          // Ultrasonic wave monitor
 #define UFC23_CR_USM_MASK_HR_WIN_ADDRESS                (0xB2)          // High resolution receiver mask in up direction
 #define UFC23_CR_SHR_DEBUG                              (0xDF)          // Reserved
-#define UFC23_CR_SR_DEVICE_ID_ADDRESS                   (0xFF)          // Identification of UFC23 or UFC18
+#define UFC23_CR_SR_DEVICE_ID_ADDRESS                   (0xFF)          // Identification of UFC23
 
 //// Index of CR configuration registers array
 #define UFC23_CR_FRU_IFH_INDEX                          (0)             // Index of the configuration for the CR_FRU_IFH register on the CR array
@@ -717,7 +718,6 @@ typedef uint16_t Ufc23_ExtendedCommands;
 //// Bit definition of CR_SR_DEVICE_ID register
 #define UFC23_C_SR_DEVICE_ID_Pos                        (8U)                                            // Device identification
 #define UFC23_C_SR_DEVICE_ID_Msk                        (0xFFUL << UFC23_C_SR_DEVICE_ID_Pos)            // 0x0000FF00
-#define UFC23_C_SR_DEVICE_ID_UFC18                      (0x18)                                          // Device identification for UFC18
 #define UFC23_C_SR_DEVICE_ID_UFC23                      (0x23)                                          // Device identification for UFC23
 
 //// Byte definitions for the USM Bundle data. For batch mode these definitions are relative to the start of each batch
@@ -760,8 +760,8 @@ typedef uint16_t Ufc23_ExtendedCommands;
 #define UFC23_USM_BUNDLE_PW2_FHL_Pos                    (16U)                                                   // PW of the 2nd hit calculated with first hit level threshold (optional)
 #define UFC23_USM_BUNDLE_PW2_FHL_Msk                    (0xFFFFUL << UFC23_USM_BUNDLE_PW2_FHL_Pos)              // 0x0000FFFF
 #define UFC23_USM_BUNDLE_PW_ZCL_Pos                     (16U)                                                   // PW of the 3rd or 4th hit calculated with zero cross threshold (optional)
-#define UFC23_USM_BUNDLE_PW_ZCL_Msk                     (0xFFUL << UFC23_USM_BUNDLE_PW_ZCL_Pos)                 // 0x0000FFFF
-#define UFC23_USM_BUNDLE_TOF_HIT_NUM_Pos                (8U)                                                   // Number of hits received while transmitting
+#define UFC23_USM_BUNDLE_PW_ZCL_Msk                     (0xFFFFUL << UFC23_USM_BUNDLE_PW_ZCL_Pos)               // 0xFFFF0000
+#define UFC23_USM_BUNDLE_TOF_HIT_NUM_Pos                (8U)                                                    // Number of hits received while transmitting
 #define UFC23_USM_BUNDLE_TOF_HIT_NUM_Msk                (0xFFUL << UFC23_USM_BUNDLE_TOF_HIT_NUM_Pos)            // 0x00FF0000
 #define UFC23_USM_BUNDLE_TOF_MULTIHIT_Pos               (0U)                                                    // Multi hit summation in up direction MSB
 #define UFC23_USM_BUNDLE_TOF_MULTIHIT_Msk               (0xFFUL << UFC23_USM_BUNDLE_TOF_MULTIHIT_Pos)           // 0xFF000000

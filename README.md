@@ -1,4 +1,4 @@
-# STM32 project examples for ScioSense UFC23 and UFC18 ultrasound sensors
+# STM32 project examples for ScioSense UFC23 ultrasound sensor
 The UFCxx sensor family from [ScioSense](https://www.sciosense.com/) offers ultrasonic flow converters for measurements in water, heat and gas meters. The sensors come in the size QFN32 package with digital SPI interface. It uses an high-performance front-end capable of driving two transducers and processing the received signal to extract the time of flight (TOF) information with high precision and offset stability.
 
 <img src="Images/ufc23.png" width="400">

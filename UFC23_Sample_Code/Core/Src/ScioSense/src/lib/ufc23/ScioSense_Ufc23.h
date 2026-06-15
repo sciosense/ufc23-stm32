@@ -64,7 +64,6 @@ typedef enum
 typedef enum
 {
     NOT_INITIALIZED,
-    UFC18_SENSOR,
     UFC23_SENSOR,
     UNKNOWN
 } Ufc23_PartID;
@@ -300,6 +299,7 @@ typedef struct ScioSense_Ufc23
     UFC23_REG_SIZE              CR[UFC23_AMOUNT_CONFIGURATION_REGISTERS];
     UFC23_REG_ADD_SIZE          Addresses[UFC23_AMOUNT_CONFIGURATION_REGISTERS];
     UFC23_COM_SIZE              DataBuffer[UFC23_AMOUNT_USM_BATCH_BYTES];
+    float                       tofLsbNs[UFC23_AMOUNT_BUNDLES_MAX];                 // Value of the LSB of a Time of Flight measurement in nanoseconds for each measurement of the batch
 
     UFC23_ParamTypeDef          Param;                                              // Configuration Parameter
     Ufc23_StateTypeDef          State;                                              // Status of UFC23
@@ -310,9 +310,6 @@ typedef struct ScioSense_Ufc23
     UFC23_FR_FE_SIZE            frontendErrorFlags;                                 // Errors reported in the Frontend Error Flag Register
     UFC23_CYCLE_TIME_SIZE       measureCycleTimeUs;                                 // Measure Cycle Time in microseconds
     Ufc23_PartID                partId;                                             // Part ID of the device
-    float                       correctionFactorHso;                                // Correction factor to use with TDC results
-    float                       pwLsbNs;                                            // Value of the LSB of a Pulse Width measurement in nanoseconds
-    float                       tofLsbNs;                                           // Value of the LSB of a Time of Flight measurement in nanoseconds
     float                       zeroCrossCalibration;                               // Last measured Zero Cross Calibration value
     float                       pgaGain;                                            // Total gain of the PGA
 } ScioSense_Ufc23;
@@ -325,7 +322,7 @@ static inline Result                    Ufc23_StartCyclingMeasurement           
 static inline Result                    Ufc23_DetectEndBootLoadSequence             (ScioSense_Ufc23* ufc23);               // Checks if the bootload has been completed
 static inline Result                    Ufc23_SetStandbyState                       (ScioSense_Ufc23* ufc23);               // Sets the sensor into Standby mode
 
-static inline uint8_t                   Ufc23_IsPartIdValid                         (ScioSense_Ufc23* ufc23);               // Returns 1 if the part ID is a UFC18 or UFC23
+static inline uint8_t                   Ufc23_IsPartIdValid                         (ScioSense_Ufc23* ufc23);               // Returns 1 if the part ID is a UFC23
 static inline Result                    Ufc23_GetPartId                             (ScioSense_Ufc23* ufc23);               // Gets the Part ID of the sensor
 
 static inline Result                    Ufc23_WriteRemoteCommand                    (ScioSense_Ufc23* ufc23, uint8_t remoteCommand, uint16_t extendedCommand);                                                  // Writes a remote command to the sensor
@@ -343,8 +340,7 @@ static inline Result                    Ufc23_ReleaseHaltMeasureTimer           
 
 static inline UFC23_BATCH_AMOUNT_SIZE   Ufc23_GetAmountMeasurementsInBatch          (ScioSense_Ufc23* ufc23);                                                       // Returns the amount of measurements on each batch
 static inline float                     Ufc23_GetPgaGain                            (ScioSense_Ufc23* ufc23);                                                       // Returns the total PGA gain that has been configured into the device
-static inline float                     Ufc23_GetTimeOfFlightLsbNs                  (ScioSense_Ufc23* ufc23);                                                       // Returns the LSB of the time of Flight raw measurements in nanoseconds
-static inline float                     Ufc23_GetPulseWidthLsb                      (ScioSense_Ufc23* ufc23);                                                       // Returns the LSB of the Pulse Width raw measurements
+static inline float                     Ufc23_GetTimeOfFlightLsbNs                  (ScioSense_Ufc23* ufc23, uint8_t index);                                        // Returns the LSB of the time of Flight raw measurements in nanoseconds for the specified batch index
 static inline UFC23_FR_SIZE             Ufc23_GetCommunicationFlagRegister          (ScioSense_Ufc23* ufc23);                                                       // Read the Communication flag register from the device
 static inline UFC23_FR_SIZE             Ufc23_GetInterruptFlagRegister              (ScioSense_Ufc23* ufc23);                                                       // Read the Interrupt flag register from the device
 static inline UFC23_FR_FE_SIZE          Ufc23_GetFrontendErrorFlagRegister          (ScioSense_Ufc23* ufc23);                                                       // Read the Frontend Error flag register from the device
@@ -356,9 +352,9 @@ static inline Result                    Ufc23_TriggerTransducerPortOpenMeasureme
 static inline UFC23_FR_FE_SIZE          Ufc23_ErrorsPresentInLastUpdate             (ScioSense_Ufc23* ufc23);                                                       // Returns the last value read of the Frontend error flag register
 
 static inline Result                    Ufc23_GetUSMData                            (ScioSense_Ufc23* ufc23);                                                       // Read the whole USM section of the RAM
-static inline void                      Ufc23_UpdateCorrectionFactorHso             (ScioSense_Ufc23* ufc23, uint32_t rmHsoCalib, float lsoNominalFrequencyHz);     // Use the High Speed Oscillator calibration value to update the Calibration Factor HSO
-static inline void                      Ufc23_UpdatePulseWidthLsb                   (ScioSense_Ufc23* ufc23, float correctionFactor, float nominalFrequencyHz);     // Use the Correction Factor HSO to calculate the conversion factor of the Pulse Width into nanoseconds
-static inline void                      Ufc23_UpdateTimeOfFlightLsb                 (ScioSense_Ufc23* ufc23, float correctionFactor, float nominalFrequencyHz);     // Use the Correction Factor HSO to calculate the conversion factor of the Time of Flight into nanoseconds
+static inline void                      Ufc23_CopyLastCorrectionFactorHso           (ScioSense_Ufc23* ufc23);                                                       // Copies the last measured TDC to nanoseconds conversion factor for all elements of the batch
+static inline void                      Ufc23_UpdateCorrectionFactorHso             (ScioSense_Ufc23* ufc23, uint8_t batchIndex, uint32_t rmHsoCalib, float lsoNominalFrequencyHz);     // Use the High Speed Oscillator calibration value to update the Calibration Factor HSO
+static inline void                      Ufc23_UpdateTimeOfFlightLsb                 (ScioSense_Ufc23* ufc23, uint8_t batchIndex, float correctionFactor, float nominalFrequencyHz);     // Use the Correction Factor HSO to calculate the conversion factor of the Time of Flight into nanoseconds
 static inline void                      Ufc23_SetMeasureCycleTimeUs                 (ScioSense_Ufc23* ufc23);                                                       // Updates the configured MeasureCycleTime in microseconds
 static inline UFC23_CYCLE_TIME_SIZE     Ufc23_GetMeasureCycleTimeUs                 (ScioSense_Ufc23* ufc23);                                                       // Returns the configured MeasureCycleTime in microseconds
 static inline void                      Ufc23_UpdateAmountBundlesInBatch            (ScioSense_Ufc23* ufc23);                                                       // Set the amount of bundle on each batch from the sensor configuration
@@ -381,11 +377,13 @@ static inline uint8_t                   Ufc23_ParsePulseWidthRaw                
 static inline uint8_t                   Ufc23_ParseTofMultiHitSumRaw                (ScioSense_Ufc23* ufc23, uint8_t batchIndex, uint64_t* tofMultiHitUp, uint64_t* tofMultiHitDn);                                 // Returns the raw multi hit sum values located at the specified bundle index from the last USM data update if it is a valid measurement
 static inline uint8_t                   Ufc23_ParseTofMultiHitsCount                (ScioSense_Ufc23* ufc23, uint8_t batchIndex, uint8_t* multiHitCountUp, uint8_t* multiHitCountDn);                               // Returns the amount of ToF hits located at the specified bundle index from the last USM data update if it is a valid measurement
 static inline uint8_t                   Ufc23_ParseVddRaw                           (ScioSense_Ufc23* ufc23, uint8_t batchIndex, uint16_t* vdd, uint16_t* vcc);                                                     // Returns the raw supply voltage values located at the specified bundle index from the last USM data update if it is a valid measurement
+static inline void                      Ufc23_UpdateHccCalib                        (ScioSense_Ufc23* ufc23);                                                                                                       // Updates the conversion from TDC to nanoseconds with the new calibrations of the HCC
 static inline uint8_t                   Ufc23_ParseHccCalibRaw                      (ScioSense_Ufc23* ufc23, uint8_t batchIndex, uint32_t* hccCalibration);                                                         // Returns the raw High Speed Calibration value located at the specified bundle index from the last USM data update if it is a valid measurement
 static inline uint8_t                   Ufc23_ParseZcLvlRaw                         (ScioSense_Ufc23* ufc23, uint8_t batchIndex, uint16_t* zcLvl);                                                                  // Returns the raw Zero Cross Level value located at the specified bundle index from the last USM data update if it is a valid measurement
 static inline uint8_t                   Ufc23_ParseSingleCycleUsTofHitsRaw          (ScioSense_Ufc23* ufc23, uint32_t* usTofHitUp, uint32_t* usTofHitDn, uint8_t* amountHitsUp, uint8_t* amountHitsDn);             // Returns the raw single measurement hits from the last USM data update if it is a valid measurement
 
-static inline uint8_t                   Ufc23_ParseAmplitudeV                       (ScioSense_Ufc23* ufc23, uint8_t batchIndex, UFC23_AMP_V_TypeDef* amplitudesVUp, UFC23_AMP_V_TypeDef* amplitudesVDn);           // Returns the amplitude values in volts located at the specified bundle index from the last USM data update if it is a valid measurement
+static inline uint8_t                   Ufc23_ParseAmplitudeV                       (ScioSense_Ufc23* ufc23, uint8_t batchIndex, UFC23_AMP_V_TypeDef* amplitudesVUp, UFC23_AMP_V_TypeDef* amplitudesVDn);           // Returns the signal amplitude values in volts located at the specified bundle index from the last USM data update if it is a valid measurement
+static inline uint8_t                   Ufc23_ParseAmplitudeAfterPgaV               (ScioSense_Ufc23* ufc23, uint8_t batchIndex, UFC23_AMP_V_TypeDef* amplitudesVUp, UFC23_AMP_V_TypeDef* amplitudesVDn);           // Returns the signal amplitude values after the PGA in volts located at the specified bundle index from the last USM data update if it is a valid measurement
 static inline uint8_t                   Ufc23_ParsePulseWidthRatio                  (ScioSense_Ufc23* ufc23, uint8_t batchIndex, UFC23_PW_Ps_TypeDef* pulseWidthsRatioUp, UFC23_PW_Ps_TypeDef* pulseWidthsRatioDn); // Returns the pulse width ratio values located at the specified bundle index from the last USM data update if it is a valid measurement
 static inline uint8_t                   Ufc23_ParseTofMultiHitNs                    (ScioSense_Ufc23* ufc23, uint8_t batchIndex, float* tofMultiHitUp, float* tofMultiHitDn);                                       // Returns the multi hit sum values in nanoseconds located at the specified bundle index from the last USM data update if it is a valid measurement
 static inline uint8_t                   Ufc23_ParseVddV                             (ScioSense_Ufc23* ufc23, uint8_t batchIndex, float* vdd, float* vcc);                                                           // Returns the supply voltage values in volts located at the specified bundle index from the last USM data update if it is a valid measurement
@@ -399,7 +397,8 @@ static inline uint8_t                   Ufc23_ParseBatchAmplitudeRaw            
 static inline uint8_t                   Ufc23_ParseBatchPulseWidthRaw               (ScioSense_Ufc23* ufc23, UFC23_PW_Raw_TypeDef* pulseWidthsRawUp, UFC23_PW_Raw_TypeDef* pulseWidthsRawDn);       // Returns the raw pulse width values from all the measurement bundels in the batch
 static inline uint8_t                   Ufc23_ParseBatchTofMultiHitSumRaw           (ScioSense_Ufc23* ufc23, uint64_t* tofMultiHitUp_Raw, uint64_t* tofMultiHitDn_Raw);                             // Returns the raw multi hit sum values from all the measurement bundels in the batch
 
-static inline uint8_t                   Ufc23_ParseBatchAmplitudeV                  (ScioSense_Ufc23* ufc23, UFC23_AMP_V_TypeDef* amplitudesVUp, UFC23_AMP_V_TypeDef* amplitudesVDn);               // Returns the amplitude values in volts from all the measurement bundels in the batch
+static inline uint8_t                   Ufc23_ParseBatchAmplitudeV                  (ScioSense_Ufc23* ufc23, UFC23_AMP_V_TypeDef* amplitudesVUp, UFC23_AMP_V_TypeDef* amplitudesVDn);               // Returns the signal amplitude values in volts from all the measurement bundels in the batch
+static inline uint8_t                   Ufc23_ParseBatchAmplitudeAfterPgaV          (ScioSense_Ufc23* ufc23, UFC23_AMP_V_TypeDef* amplitudesVUp, UFC23_AMP_V_TypeDef* amplitudesVDn);               // Returns the signal amplitude values after the PGA in volts from all the measurement bundels in the batch
 static inline uint8_t                   Ufc23_ParseBatchPulseWidthRatio             (ScioSense_Ufc23* ufc23, UFC23_PW_Ps_TypeDef* pulseWidthsVUp, UFC23_PW_Ps_TypeDef* pulseWidthsVDn);             // Returns the pulse width ratio values from all the measurement bundels in the batch
 static inline uint8_t                   Ufc23_ParseBatchTofMultiHitNs               (ScioSense_Ufc23* ufc23, float* tofMultiHitPsUp, float* tofMultiHitPsDn);                                       // Returns the multi hit sum values in nanoseconds from all the measurement bundels in the batch
 static inline uint8_t                   Ufc23_ParseBatchTofMultiHitsCount           (ScioSense_Ufc23* ufc23, uint8_t* multiHitCountUp, uint8_t* multiHitCountDn);                                   // Returns the amount of hits from all the measurement bundels in the batch
